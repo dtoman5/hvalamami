@@ -1,88 +1,123 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import Link from 'next/link';
-import PosodobiGeslo from '../auth/components/PosodobiGeslo';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
-function PasswordResetContent({ searchParams, supabase }) {
-  const [tokenValid, setTokenValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(true);
+const supabase = createClientComponentClient();
+
+const schema = yup.object().shape({
+  newPassword: yup
+    .string()
+    .required("Novo geslo je obvezno")
+    .min(8, "Geslo mora vsebovati vsaj 8 znakov"),
+  confirmPassword: yup
+    .string()
+    .required("Potrditev gesla je obvezna")
+    .oneOf([yup.ref("newPassword")], "Gesli se ne ujemata"),
+});
+
+export default function PosodobiGeslo() {
+  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState('');
   const router = useRouter();
 
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  // Uporaba useEffect za asinhrono nalaganje `window.location.search` na klientu
+  const [email, setEmail] = useState('');
+
   useEffect(() => {
-    const checkToken = async () => {
-      // Preveri error parametre v URL-ju
-      const error = searchParams.get('error');
-      const errorDescription = searchParams.get('error_description');
-
-      if (error === 'access_denied' || errorDescription?.includes('expired')) {
-        setErrorMessage("Povezava je pretekla ali neveljavna");
-        setTokenValid(false);
-        setLoading(false);
-        return;
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const emailFromSearch = params.get("email");
+      if (emailFromSearch) {
+        setEmail(emailFromSearch);
       }
+    }
+  }, []); // Samo na klientu se bo izvedlo
 
-      try {
-        // Preveri veljavnost seje
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        
-        if (authError || !user) {
-          throw new Error("Neveljavna seja");
-        }
-        
-        setTokenValid(true);
-      } catch (error) {
-        console.error('Napaka pri preverjanju žetona:', error);
-        setErrorMessage("Manjkajoč ali neveljaven žeton za ponastavitev");
-        setTokenValid(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: data.newPassword
+      });
 
-    checkToken();
-  }, [searchParams, supabase]);
+      if (error) throw error;
 
-  if (loading) {
-    return (
-      <div className="center-position">
-        <div className="right-side-content">
-          <div className="right-side-text text-center">
-            <p>Preverjanje povezave...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!tokenValid) {
-    return (
-      <div className="center-position">
-        <div className="right-side-content">
-          <div className="right-side-text text-center">
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <Link href="/pozabljeno-geslo" className="submit-btn">
-              Zahtevaj novo povezavo
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return <PosodobiGeslo />;
-}
-
-export default function PosodobiGesloPage() {
-  const searchParams = useSearchParams();
-  const supabase = createClientComponentClient();
+      toast.success("Geslo uspešno posodobljeno!");
+      router.push("/zid");
+    } catch (error) {
+      toast.error(error.message || "Napaka pri posodabljanju gesla");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PasswordResetContent searchParams={searchParams} supabase={supabase} />
-    </Suspense>
+    <div className="logo-f-p">
+      <div className="logo">
+        <img
+          src="https://cdn.prod.website-files.com/652dbebd0c8e37e771b32d9c/652ddafb178c90f84e21cb60_Group%204.svg"
+          alt="logo"
+        />
+      </div>
+      <div className="center-position">
+        <div className="right-side-content text-center">
+          <div className="right-side-text">
+            <h1 className="m-b-1">Ponastavi geslo zdaj</h1>
+            <p>Vpiši novo željeno geslo.</p>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="form-group m-t-3">
+                <input
+                  type="password"
+                  placeholder="Vpiši novo geslo"
+                  {...register("newPassword")}
+                  className={errors.newPassword ? "is-invalid" : ""}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                {errors.newPassword && (
+                  <p className="invalid-feedback">{errors.newPassword.message}</p>
+                )}
+                <PasswordStrengthIndicator password={password} />
+              </div>
+
+              <div className="form-group m-b-2">
+                <input
+                  type="password"
+                  placeholder="Ponovno vpiši novo geslo"
+                  {...register("confirmPassword")}
+                  className={errors.confirmPassword ? "is-invalid" : ""}
+                />
+                {errors.confirmPassword && (
+                  <p className="invalid-feedback">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="form-group m-b-2">
+                <button
+                  className="submit-btn"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? "Posodabljanje..." : "Ponastavi geslo"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
