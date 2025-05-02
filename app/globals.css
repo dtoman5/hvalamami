@@ -1668,6 +1668,10 @@ select {
   position: relative;
 }
 
+.posts-comment-input .form-group textarea {
+  height: 50px;
+}
+
 .posts-comment-input button {
   float: right;
 }

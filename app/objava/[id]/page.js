@@ -530,7 +530,7 @@ export default function PostPage() {
                         style={{ 
                           resize: "none",
                           overflowY: "auto",
-                          minHeight: '76px',
+                          minHeight: '50px',
                           maxHeight: "228px",
                           lineHeight: "1.5",
                           padding: "8px",
