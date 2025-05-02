@@ -6,8 +6,8 @@ import TimeAgo from "./TimeAgo";
 import UserBadge from "../User/UserBadge";
 import LikeButton from "./LikeButtons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { usePostReviewStore } from "@/app/store/postReviewStore";
-import MediaLazyLoader from "@/app/components/LazyLoading";
+import { usePostReviewStore } from "@/store/postReviewStore";
+import MediaLazyLoader from "@/components/LazyLoading";
 import Link from "next/link";
 
 function Post({ post, onDelete }) {

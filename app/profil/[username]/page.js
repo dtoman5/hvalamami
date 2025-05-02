@@ -3,13 +3,13 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { notFound } from "next/navigation";
-import Navbar from "@/app/components/Navbar";
-import Sidebar from "@/app/components/Sidebar";
-import UserBadge from "@/app/components/User/UserBadge";
-import FollowButton from "@/app/components/User/FollowButton";
-import Post from "@/app/components/Posts/Post";
+import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import UserBadge from "@/components/User/UserBadge";
+import FollowButton from "@/components/User/FollowButton";
+import Post from "@/components/Posts/Post";
 import { toast } from "react-toastify";
-import InfinityLoader from "@/app/components/InfiniteList";
+import InfinityLoader from "@/components/InfiniteList";
 
 export default function Profile({ params: paramsPromise }) {
   const supabase = createClientComponentClient();

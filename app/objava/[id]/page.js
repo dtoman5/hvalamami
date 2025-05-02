@@ -4,15 +4,15 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import TimeAgo from '@/app/components/Posts/TimeAgo';
-import UserBadge from '@/app/components/User/UserBadge';
-import LikeButton from '@/app/components/Posts/LikeButtons';
-import LikeComment from '@/app/components/Comments/LikeComment';
-import Navbar from '@/app/components/Navbar';
-import { usePostReviewStore } from '@/app/store/postReviewStore';
-import { createNotification } from '@/app/lib/notifications';
-import InfinityLoader from '@/app/components/InfiniteList';
-import MediaLazyLoader from '@/app/components/LazyLoading';
+import TimeAgo from '@/components/Posts/TimeAgo';
+import UserBadge from '@/components/User/UserBadge';
+import LikeButton from '@/components/Posts/LikeButtons';
+import LikeComment from '@/components/Comments/LikeComment';
+import Navbar from '@/components/Navbar';
+import { usePostReviewStore } from '@/store/postReviewStore';
+import { createNotification } from '@/lib/notifications';
+import InfinityLoader from '@/components/InfiniteList';
+import MediaLazyLoader from '@/components/LazyLoading';
 
 export default function PostPage() {
   const supabase = createClientComponentClient();

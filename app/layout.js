@@ -4,12 +4,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-import AuthProvider from "@/app/providers/AuthProvider";
-import { Providers } from '@/app/providers';
-import UploadNotification from '@/app/components/UploadNotification';
+import AuthProvider from "@/providers/AuthProvider";
+import { Providers } from '@/providers';
+import UploadNotification from '@/components/UploadNotification';
 import { useEffect } from 'react';
-import { usePostReviewStore } from "@/app/store/postReviewStore";
-import PostReview from '@/app/components/Overlays/PostReview';
+import { usePostReviewStore } from "@/store/postReviewStore";
+import PostReview from '@/components/Overlays/PostReview';
 
 export default function RootLayout({ children }) {
   const supabase = createClientComponentClient();

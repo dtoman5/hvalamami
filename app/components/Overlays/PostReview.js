@@ -4,9 +4,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { toast } from 'react-toastify';
-import { useUploadStore } from '@/app/store/uploadStore';
-import { processUpload } from '@/app/lib/processUpload';
-import { compressImage } from '@/app/lib/compressImage';
+import { useUploadStore } from '@/store/uploadStore';
+import { processUpload } from '@/lib/processUpload';
+import { compressImage } from '@/lib/compressImage';
 
 const MAX_FILE_SIZE_MB = 50;
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];

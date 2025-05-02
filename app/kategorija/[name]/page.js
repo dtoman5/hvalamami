@@ -2,12 +2,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useParams, useRouter } from 'next/navigation';
-import Post from '@/app/components/Posts/Post';
+import Post from '@/components/Posts/Post';
 import { toast } from 'react-toastify';
-import InfinityLoader from '@/app/components/InfiniteList';
-import Navbar from '@/app/components/Navbar';
-import Sidebar from '@/app/components/Sidebar';
-import CategoryFollowButton from '@/app/components/Categories/CategoryFollowButton';
+import InfinityLoader from '@/components/InfiniteList';
+import Navbar from '@/components/Navbar';
+import Sidebar from '@/components/Sidebar';
+import CategoryFollowButton from '@/components/Categories/CategoryFollowButton';
 
 function CategoryPage() {
   const { name: categoryName } = useParams();

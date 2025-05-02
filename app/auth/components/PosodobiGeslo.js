@@ -1,12 +1,15 @@
-"use client";
-import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
+'use client';
+
+import { Suspense, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
+
+const supabase = createClientComponentClient();
 
 const schema = yup.object().shape({
   newPassword: yup
@@ -21,8 +24,8 @@ const schema = yup.object().shape({
 
 export default function PosodobiGeslo() {
   const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState("");
-  const supabase = createClientComponentClient();
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const router = useRouter();
 
   const {
@@ -32,6 +35,17 @@ export default function PosodobiGeslo() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  // Uporaba useEffect za asinhrono nalaganje `window.location.search` na klientu
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const emailFromSearch = params.get("email");
+      if (emailFromSearch) {
+        setEmail(emailFromSearch);
+      }
+    }
+  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -52,7 +66,7 @@ export default function PosodobiGeslo() {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <div className="logo-f-p">
         <div className="logo">
           <img
@@ -109,6 +123,6 @@ export default function PosodobiGeslo() {
           </div>
         </div>
       </div>
-    </>
+    </Suspense>
   );
 }

@@ -1,17 +1,16 @@
-"use client";
-import { useEffect, useState } from 'react';
+'use client';
+
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 import PosodobiGeslo from '../auth/components/PosodobiGeslo';
 
-export default function PosodobiGesloPage() {
+function PasswordResetContent({ searchParams, supabase }) {
   const [tokenValid, setTokenValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const supabase = createClientComponentClient();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -75,4 +74,15 @@ export default function PosodobiGesloPage() {
   }
 
   return <PosodobiGeslo />;
+}
+
+export default function PosodobiGesloPage() {
+  const searchParams = useSearchParams();
+  const supabase = createClientComponentClient();
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PasswordResetContent searchParams={searchParams} supabase={supabase} />
+    </Suspense>
+  );
 }

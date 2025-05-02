@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-toastify";
-import { createNotification } from "@/app/lib/notifications";
+import { createNotification } from "@/lib/notifications";
 
 export default function LikeComment({ commentId }) {
   const supabase = createClientComponentClient();

@@ -1,7 +1,7 @@
 // app/components/UploadNotification.js
 'use client';
 
-import { useUploadStore } from '@/app/store/uploadStore';
+import { useUploadStore } from '@/store/uploadStore';
 
 export default function UploadNotification() {
   const { uploadInProgress, uploadMessage } = useUploadStore();
