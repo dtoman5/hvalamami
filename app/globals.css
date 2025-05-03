@@ -376,7 +376,7 @@ select {
   bottom: 0;
   width: 100%;
   height: 100%;
-  background-color: #fafafa;
+  background-color: #ffffff;
   z-index: 1000;
   overflow-y: auto;
 }
@@ -389,7 +389,7 @@ select {
   margin: 100px auto;
   margin-bottom: 25px;
   box-sizing: border-box;
-  width: 700px;
+  width: 630px;
   overflow: auto;
 }
 
@@ -423,8 +423,8 @@ select {
 /* Overlay za obvestila */
 .overlay-content-notify {
   box-sizing: border-box;
-  padding: 50px;
-  background-color: #fafafa;
+  padding: 30px;
+  background-color: #ffffff;
   border-radius: 50px;
 }
 
@@ -452,7 +452,10 @@ select {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 20px;
+  padding: 15px 0px;
+  align-content: stretch;
+  align-items: center;
+  border-bottom: solid 1px #dddddd;
 }
 
 .left-nofity-info {
@@ -562,10 +565,8 @@ select {
 
 /* ZA POST */
 .post-overlay {
-  background-color: #fafafa;
+  background-color: #ffffff;
   border-radius: 25px;
-  padding-left: 50px;
-  padding-right: 50px;
   overflow: auto;
 }
 
@@ -618,6 +619,11 @@ select {
   height: auto;
 }
 
+.post-small {
+  font-size: 14px;
+  color: gray;
+}
+
 .text-length span {
   padding: 5px 20px;
   font-size: 10px;
@@ -629,7 +635,6 @@ select {
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
   font-weight: bold;
 }
 
@@ -654,6 +659,12 @@ select {
 .image-url {
   color: white!important;
   background-color: #262626!important;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 15px 20px;
+  border-radius: 25px;
 }
 
 .image-url::placeholder {
@@ -729,7 +740,7 @@ select {
 }
 
 .container-content-bg {
-  border-top: solid 1px gray;
+  border-top: solid 1px rgb(255, 255, 255);
 }
 
 .row {
@@ -867,7 +878,7 @@ select {
 .dashboard-post {
   position: fixed;
   bottom: 15px;
-  padding: 20px 100px;
+  padding: 20px;
   background: black;
   border-radius: 16px;
   border-radius: 15px;
@@ -961,7 +972,7 @@ select {
 .post-content {
   padding: 30px;
   background-color: white;
-  border-radius: 60px;
+  border-radius: 0px;
 }
 
 /* Category content */
@@ -1399,20 +1410,21 @@ select {
 }
 
 .navigation button {
-  font-family: "Funnel Display", serif;
   background: transparent;
   border: none;
   font-size: 17px;
   color: #a8a8a8;
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
   padding: 15px;
-  border-bottom: solid 1px #b8b8b8;
+  border-bottom: solid 1px #e6e6e6;
 }
 
 .navigation button.active {
   border-bottom: solid 3px black;
     color: #1c1c1c;
+    letter-spacing: 2px;
+    font-style: italic;
 }
 
 /* Ooblika vsake objave */
@@ -1656,12 +1668,8 @@ select {
   width: 610px;
   padding: 10px;
   border-radius: 15px;
-  background-color: #fafafa;
+  background-color: #FFFFFF;
   border: solid 1px #d3d3d3;
-}
-
-.posts-comment-input input {
-  padding-right: 100px!important;
 }
 
 .posts-comment-input .form-group {
@@ -1670,6 +1678,7 @@ select {
 
 .posts-comment-input .form-group textarea {
   height: 50px;
+  background-color: white;
 }
 
 .posts-comment-input button {
@@ -1718,10 +1727,9 @@ select {
 }
 
 .row-inner-bg {
-  background-color: #fafafa;
-  padding: 30px;
-  padding-bottom: 0;
+  background-color: white;
   border-radius: 60px;
+  border: solid 1px #dcdcdc;
 }
 
 .user-type {
@@ -2291,6 +2299,19 @@ select {
 	visibility: hidden;
 }
 
+.group-checkbox {
+  display: flex;
+  justify-content: center;
+  padding: 10px 25px;
+  align-content: space-between;
+}
+
+.group-checkbox span {
+  font-size: 16px;
+  font-weight: 800;
+  color: gray;
+}
+
 .group-checkbox label {
 	cursor: pointer;
 	text-indent: -9999px;
@@ -2437,6 +2458,7 @@ label:active:after {
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
+  border: solid 1px #dcdcdc;
 }
 
 .avatar img {
@@ -2483,13 +2505,13 @@ label:active:after {
 
 
 .overlay-list-notify.unread {
-  background-color: #000;
-  color: #fff;
+  background-color: #f1f1f1;
+  color: #000000;
 }
 
 .overlay-list-notify.unread .username,
 .overlay-list-notify.unread .p-t-1 span {
-  color: #fff;
+  color: #000000;
 }
 
 .overlay-list-notify.unread img,
@@ -2634,15 +2656,20 @@ label:active:after {
 
 
 .btn-delete-not {
-  float: right;
   font-size: 15px;
-  color: #ff8e8e;
+  color: #ff1728;
   font-weight: bold;
   background-color: transparent;
   cursor: pointer;
   padding: 5px 0px;
   border: none;
-  border-bottom: solid 3px #ff8e8e;
+  border-bottom: solid 3px #ff1728;
+  float: right;
+}
+
+.btn-delete-not:hover {
+  color: gray;
+  border-bottom: solid 3px gray;
 }
 
 
@@ -2787,7 +2814,11 @@ label:active:after {
   .dashboard-post {
     bottom: 10px;
     left: 50%;
+    padding: 15px 40px;
     transform: translateX(-50%);
+  }
+  .flex-content {
+    width: max-content;
   }
   .navigation button {
     font-size: 14px;
@@ -2804,8 +2835,18 @@ label:active:after {
   .posts {
     padding: 20px 15px;
   }
+  .overlay-content {
+    margin: 0px auto;
+    margin-top: 100px;
+  }
   .overlay-content-notify {
+    background-color: white;
     padding: 0;
+    border-radius: 0px;
+  }
+  .form-post-end {
+    background: white;
+    padding: 0px;
     border-radius: 0px;
   }
   .notification-profile .avatar {
@@ -2833,5 +2874,39 @@ label:active:after {
   }
   .overlay-list-notify {
     display: inline-flex;
+  }
+  .posts-comment-input {
+    width: 100%;
+    padding: 10px;
+    left: 0px;
+    bottom: 0px;
+    border-radius: 15px;
+  }
+  .form-post-end {
+    display: block;
+  }
+  .select-group {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .form-group.cat-btn {
+    width: 50%;
+  }
+  .form-group select {
+    width: 100%;
+  }
+  .post-overlay .submit-button {
+    width: 100%;
+  }
+  .left-side-page {
+    display: none;
+  }
+  .right-side-page {
+    width: 100%;
+  }
+  .right-side-content {
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }

@@ -542,7 +542,7 @@ export default function PostPage() {
                         onClick={handleAddOrUpdateComment}
                         disabled={!commentInput.trim()}
                       >
-                        {editingCommentId ? "Posodobi" : "Dodaj"} <i className="bi bi-send-plus"></i>
+                        {editingCommentId ? "Posodobi" : <i className="bi bi-send"></i>} <i className="bi bi-send-plus"></i>
                       </button>
                     </div>
                   </div>

@@ -208,19 +208,26 @@ export default function PostReview({ isOpen, onClose, post, categories }) {
       <button className="close-btn" onClick={onClose}><i className="bi bi-x-lg"></i></button>
       <div className="overlay-content">
         <div className="post-overlay">
-          <div className="user-post padding-none">
-            <img src={profile?.profile_picture_url || '/default-avatar.png'} alt="Avatar" className="avatar" />
-            <div className="user-post-intro">
-              @{profile?.username || 'uporabnik'} <span>{post ? 'ureja objavo' : 'deli novo objavo'}</span>
-            </div>
-          </div>
           <div className="post-content">
+            <div className="user-post padding-none">
+              <img src={profile?.profile_picture_url || '/default-avatar.png'} alt="Avatar" className="avatar" />
+              <div className="user-post-intro">
+                {profile?.username || 'uporabnik'} <span>{post ? 'uredi objavo' : 'dodaj objavo'}</span>
+              </div>
+            </div>
+            <div className=''>
             <button className="btn-post-img m-b-2" onClick={() => fileInputRef.current.click()}><i className="bi bi-images"></i></button>
             <input type="file" ref={fileInputRef} accept="image/*,video/*" style={{ display: 'none' }} onChange={handleFileUpload} disabled={isLoading} />
             <button className="btn-post-url m-b-2" onClick={() => setShowImageUrlInput(!showImageUrlInput)}><i className="bi bi-link-45deg"></i></button>
+            <div className=''>
             {showImageUrlInput && (
               <input type="text" className="image-url" placeholder="Vnesite URL slike" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} disabled={isLoading} />
             )}
+            </div>
+            </div>
+            <div className='p-b-2'>
+            <span className='post-small'>opcijsko lahko dodaš sliko ali video. Video je omejen na 50 MB velikosti in dolžine 60 s. Predlaga se kompresija pred nalaganjem.</span>
+            </div>
             {previewMedia && (
               <div className="preview-media">
                 {mediaType === 'image' ? (
@@ -236,10 +243,12 @@ export default function PostReview({ isOpen, onClose, post, categories }) {
               </div>
             )}
             <div className="row-inner-bg">
-              <div className="form-group group-checkbox m-t-2">
+              <div className="form-group group-checkbox">
+              <div className='flex-content'>
+                <span>24-urna objava (story)</span>
                 <input type="checkbox" id="switch" checked={isStory} onChange={(e) => setIsStory(e.target.checked)} disabled={isLoading} />
                 <label htmlFor="switch"></label>
-                <span>24-urna objava (story)</span>
+              </div>
               </div>
             </div>
             <div className="form-group post-content-text m-t-2 m-b-2">
@@ -252,7 +261,7 @@ export default function PostReview({ isOpen, onClose, post, categories }) {
               <div className="select-group">
                 <div className="form-group cat-btn">
                   <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} disabled={isLoading}>
-                    <option value="">Izberi kategorijo (opcijsko)</option>
+                    <option value="">Kategorija*</option>
                     {categories.map((cat) => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
                     ))}
@@ -260,7 +269,7 @@ export default function PostReview({ isOpen, onClose, post, categories }) {
                 </div>
                 <div className="form-group cat-btn">
                   <select value={selectedRating} onChange={(e) => setSelectedRating(e.target.value)} disabled={isLoading}>
-                    <option value="">Dodaj oceno (opcijsko)</option>
+                    <option value="">Ocena*</option>
                     {[1, 2, 3, 4, 5].map((rating) => (
                       <option key={rating} value={rating}>{rating} zvezdic</option>
                     ))}
@@ -271,6 +280,7 @@ export default function PostReview({ isOpen, onClose, post, categories }) {
                 {isLoading ? (<><span className="spinner"></span> Objavljanje...</>) : (post ? 'Shrani spremembe' : 'Objavi')}
               </button>
             </div>
+            <span className='post-small'>Vsi * označeni elementi so opcijski</span>
           </div>
         </div>
       </div>

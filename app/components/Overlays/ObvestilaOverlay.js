@@ -151,8 +151,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
             Obvestila
             <button className="btn-delete-not" onClick={handleClearAll}>Počisti vsa</button>
           </div>
-
-          <div className="overlay-list-start"></div>
           <div className='inner-not-bg'>
           <InfinityLoader
             fetchItems={fetchNotifications}
@@ -163,7 +161,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
             className="p-t-2"
           />
           </div>
-          <div className="overlay-list-end"></div>
         </div>
       </div>
     </div>
