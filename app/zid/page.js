@@ -128,7 +128,7 @@ export default function Zid() {
                   {profile?.username || 'Uporabnik'}
                 </div>
               </div>
-              <div className='flex-content'>
+              <div className='flex-content-post'>
               <span className='post-icon'><i className="bi bi-plus-circle-dotted"></i></span><p>dodaj objavo</p>
               </div>
             </div>

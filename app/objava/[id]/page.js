@@ -371,9 +371,6 @@ export default function PostPage() {
                         <div className="posts-username">
                           <Link href={`/profil/${post.profiles?.username}`}>{post.profiles?.username}</Link>
                           <span><UserBadge userType={post.profiles?.user_type} /></span>
-                          {post.is_story && (
-                            <p className="story-label">Zgodba</p>
-                          )}
                         </div>
                         <div className="posts-cat">
                           Objavljeno v <Link href={`/kategorija/${post.categories?.name}`}><span>{post.categories?.name}</span></Link>
@@ -421,6 +418,13 @@ export default function PostPage() {
                       )}
                     </div>
                   )}
+
+                  <div className="m-t-2 m-b-2">
+                    {post.is_story && (
+                      <p className="story-label">Zgodba</p>
+                    )}
+                    <span className="posts-review">Ocena: {post?.rating} <i className="bi bi-asterisk"></i></span>
+                  </div>
 
                   {(image || video) && (
                     <div className="posts-img">
@@ -476,7 +480,16 @@ export default function PostPage() {
                                 {comment.profiles?.username}
                               </Link>
                               <UserBadge userType={comment.profiles?.user_type} />
-                              <TimeAgo timestamp={comment?.created_at} />
+                              <div className='posts-time'>
+                                <TimeAgo timestamp={comment?.created_at} />
+                              </div>
+                              
+                            </div>
+                            <div className="p-t-1">
+                              <p>{comment.content}</p>
+                            </div>
+                            <div className="posts-buttons-left m-t-1">
+                              <LikeComment commentId={comment.id} />
                               {userId === comment.user_id && (
                                 <>
                                   <button 
@@ -496,12 +509,6 @@ export default function PostPage() {
                                   </button>
                                 </>
                               )}
-                            </div>
-                            <div className="p-t-1">
-                              <p>{comment.content}</p>
-                            </div>
-                            <div className="posts-buttons-left m-t-1">
-                              <LikeComment commentId={comment.id} />
                             </div>
                           </div>
                         </div>
@@ -542,7 +549,7 @@ export default function PostPage() {
                         onClick={handleAddOrUpdateComment}
                         disabled={!commentInput.trim()}
                       >
-                        {editingCommentId ? "Posodobi" : <i className="bi bi-send"></i>} <i className="bi bi-send-plus"></i>
+                        {editingCommentId ? "Posodobi" : "Komentiraj"}
                       </button>
                     </div>
                   </div>

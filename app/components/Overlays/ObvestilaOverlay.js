@@ -104,7 +104,7 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
   const getMedia = (n) => n.post?.images?.[0]?.file_url || n.post?.videos?.[0]?.thumbnail_url;
 
   // Shorten username for mobile view
-  const shortenUsername = (username) => (username.length > 8 ? `${username.slice(0, 8)}...` : username);
+  const shortenUsername = (username) => (username.length > 8 ? `${username.slice(0, 15)}...` : username);
 
   // Render notification item
   const renderNotification = (n) => (
@@ -115,8 +115,8 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
         </div>
         <div className="left-nofity-info">
           <div className="username">
-            <div className='username-d'>{n.source_profile?.username}</div>
-            <div className='username-m'>{shortenUsername(n.source_profile?.username)}</div>
+            <div className='username-m'>{n.source_profile?.username}</div>
+            <div className='username-d'>{shortenUsername(n.source_profile?.username)}</div>
             <UserBadge userType={n.source_profile?.user_type} />
             <div className="time"><TimeAgo timestamp={n.created_at} /></div>
           </div>
@@ -156,8 +156,8 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
             fetchItems={fetchNotifications}
             renderItem={renderNotification}
             pageSize={10}
-            emptyComponent={<p className="text-center p-t-3 p-b-2">Ni obvestil.</p>}
-            endComponent={<p className="text-center p-t-3 p-b-2">Ni več obvestil za prikaz.</p>}
+            emptyComponent={<p className="text-center p-t-2 p-b-2">Ni obvestil.</p>}
+            endComponent={<p className="text-center p-t-2 p-b-2">Ni več obvestil za prikaz.</p>}
             className="p-t-2"
           />
           </div>

@@ -278,7 +278,7 @@ select {
   width: 100%;
   height: 70px;
   backdrop-filter: blur(13.5px);
-  border-bottom: solid 1px #d3d3d3;
+  border-bottom: solid 1px #dcdcdc;
   z-index: 99;
 }
 
@@ -405,19 +405,25 @@ select {
 .overlay-content-search input {
   box-sizing: border-box;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0;
   width: 100%;
-  background-color: #ffffff;
   border: none;
   padding: 20px 30px;
   border-radius: 40px;
+  color: white !important;
+  background-color: #262626 !important;
+}
+
+.overlay-content-search input::placeholder {
+  color: rgb(229, 229, 229);
 }
 
 .search-icon {
   position: absolute;
   right: 20px;
   top: 20px;
+  color: white;
 }
 
 /* Overlay za obvestila */
@@ -498,13 +504,11 @@ select {
 .username {
   font-size: 17px;
   font-weight: bold;
+  font-weight: 700;
 }
 
-.username span {
-  padding-left: 5px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #6e6e6e;
+.username a {
+  color: black;
 }
 
 .time span {
@@ -796,9 +800,9 @@ select {
   width: 340px;
   height: calc(100vh - 80px);
   overflow-x: auto;
-  z-index: 99;
+  z-index: 50;
   background: white;
-  border-left: solid 1px #b8b8b8;
+  border-left: solid 1px #dcdcdc;
 }
 
 .sidebar-content {
@@ -883,7 +887,8 @@ select {
   border-radius: 16px;
   border-radius: 15px;
   cursor: pointer;
-  left: calc(50% - 340px);
+  width: 180px;
+  left: 15px;
   color: white;
 }
 
@@ -980,6 +985,14 @@ select {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.flex-content-post {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
   width: 100%;
   align-items: center;
 }
@@ -1266,6 +1279,7 @@ select {
   height: 100px;
   border-radius: 60px;
   overflow: hidden;
+  border: solid 1px #dcdcdc;
 }
 
 .profile-avatar img {
@@ -1472,6 +1486,7 @@ select {
   height: 50px;
   border-radius: 50%;
   overflow: hidden;
+  border: solid 1px #dcdcdc;
 }
 .posts-avatar img {
   width: 100%;
@@ -1512,6 +1527,7 @@ select {
   font-weight: 700;
   padding: 5px 20px;
   border-radius: 20px;
+  color: #4c4c4c;
 }
 
 .posts-menu {
@@ -1615,11 +1631,16 @@ select {
   display: inline-flex;
 }
 
-.posts-buttons-likes, .posts-buttons-comments, .posts-buttons-share, .comment-buttons-likes {
+.posts-buttons-likes, .posts-buttons-comments, .posts-buttons-share {
   font-size: 17px;
   margin-right: 5px;
   padding: 9px 15px;
   color: black;
+}
+
+.comment-buttons-likes {
+  font-size: 17px;
+  color: #000;
 }
 
 .posts-buttons-likes:hover, .posts-buttons-comments:hover, .posts-buttons-share:hover, .comment-buttons-likes:hover {
@@ -1647,13 +1668,13 @@ select {
 
 .posts-show-more {
   font-size: 15px;
-    color: #ff8e8e;
+    color: #525252;
     font-weight: bold;
     background-color: transparent;
     cursor: pointer;
-    padding: 5px 0px;
+    padding-left: 10px;
     border: none;
-    border-bottom: solid 3px #ff8e8e;
+    text-decoration: underline;
 }
 
 /* Komentiranje objave */
@@ -2672,19 +2693,23 @@ label:active:after {
   border-bottom: solid 3px gray;
 }
 
+.left-nofity-info span {
+  color: #4c4c4c;
+}
+
 
 .upload-toast {
   position: fixed;
-  top: 70px;
-  left: calc(50% - 340px);
-  width: 333px;
+  right: 15px;
+  bottom: 15px;
+  width: 310px;
   height: 100px;
   border-radius: 15px;
   background-color: rgb(210 210 210 / 25%);
   color: rgb(0, 0, 0);
   -webkit-backdrop-filter: blur(13.5px);
   backdrop-filter: blur(13.5px);
-  z-index: 9999;
+  z-index: 99;
 }
 
 .upload-content {
@@ -2764,6 +2789,20 @@ label:active:after {
   display: none;
 }
 
+.btn-comm-edit {
+  background-color: transparent;
+  border: none;
+  font-size: 17px;
+  margin-left: 10px;
+}
+
+.btn-comm-delete {
+  background-color: transparent;
+  border: none;
+  font-size: 17px;
+  margin-left: 10px;
+}
+
 
 /* ZA TELEFON */
 
@@ -2785,6 +2824,10 @@ label:active:after {
     width: 30px;
     height: 30px;
   }
+  .skeleton-avatar {
+    width: 30px!important;
+    height: 30px!important;
+  }
   .user-post-intro {
     font-size: 15px;
     font-weight: 900;
@@ -2805,7 +2848,6 @@ label:active:after {
   .navbar-right {
     position: relative;
     width: auto;
-    padding: 2px;
   }
 
   .icon-btn {
@@ -2817,9 +2859,6 @@ label:active:after {
     padding: 15px 40px;
     transform: translateX(-50%);
   }
-  .flex-content {
-    width: max-content;
-  }
   .navigation button {
     font-size: 14px;
   }
@@ -2827,6 +2866,8 @@ label:active:after {
   .menu-title {
     font-size: 17px;
     letter-spacing: 3px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .category-all .btn-category-all {
@@ -2863,8 +2904,16 @@ label:active:after {
   .follow-button {
     padding: 5px 10px;
   }
+  .posts-username {
+    font-size: 14px;
+    font-weight: 700;
+  }
   .username {
     font-size: 14px;
+    font-weight: 700;
+  }
+  .posts-time {
+    padding: 0px;
   }
   .username-d {
     display: none;
@@ -2874,6 +2923,10 @@ label:active:after {
   }
   .overlay-list-notify {
     display: inline-flex;
+  }
+  .overlay-content-search {
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .posts-comment-input {
     width: 100%;
@@ -2909,4 +2962,14 @@ label:active:after {
     padding-left: 15px;
     padding-right: 15px;
   }
+  .overlay-list-notify {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .left-nofity-info {
+    padding-left: 10px;
+  }
+  .posts-username-cat {
+    padding-left: 10px;
+  };
 }

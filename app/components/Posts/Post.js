@@ -146,6 +146,13 @@ function Post({ post, onDelete }) {
           </div>
         )}
 
+        <div className="m-b-2">
+          {post.is_story && (
+            <p className="story-label">Zgodba</p>
+          )}
+          <span className="posts-review">Ocena: {post?.rating} <i className="bi bi-asterisk"></i></span>
+        </div>
+
         {(image || video) && (
           <div className="posts-img">
             {video ? (
@@ -166,13 +173,6 @@ function Post({ post, onDelete }) {
             )}
           </div>
         )}
-
-        <div className="m-t-2">
-          {post.is_story && (
-            <p className="story-label">Zgodba</p>
-          )}
-          <span className="posts-review">Ocena: {post?.rating} <i className="bi bi-asterisk"></i></span>
-        </div>
 
         <h2 className="posts-content-text">
           {displayedContent}
