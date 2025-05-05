@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const supabase = createClientComponentClient();
 
@@ -58,7 +57,6 @@ export default function CompleteProfile() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="logo-f-p">
-        {/* ... logo ... */}
       </div>
       <div className="center-position">
         <div className="right-side-content text-center">

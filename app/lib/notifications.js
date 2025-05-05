@@ -1,5 +1,4 @@
 // lib/notifications.js
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export async function createNotification({ type, user_id, source_user_id, post_id = null, comment_id = null, comment_like_id = null }) {
   const supabase = createClientComponentClient();

@@ -1,6 +1,4 @@
 'use client';
-
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Navbar from './components/Navbar';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

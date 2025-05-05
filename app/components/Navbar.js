@@ -5,7 +5,6 @@ import MenuOverlay from './Overlays/MenuOverlay';
 import SearchOverlay from './Overlays/SearchOverlay';
 import ObvestilaOverlay from './Overlays/ObvestilaOverlay';
 import { useState, useEffect, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -150,7 +149,7 @@ export default function Navbar() {
       <nav className="navbar">
         <Link href="/zid" className="navbar-left">
           <div className="logo">
-            <img src="logo-hm.png" />
+            <img src="logo-hm.png"  alt='Logotip'/>
           </div>
         </Link>
 

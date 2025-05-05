@@ -1,6 +1,5 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import { useUploadStore } from '@/store/uploadStore';
 
 const AppContext = createContext();

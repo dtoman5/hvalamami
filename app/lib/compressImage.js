@@ -1,13 +1,7 @@
 // app/lib/compressImage.js
-
 import imageCompression from 'browser-image-compression';
 
 /**
- * Kompresira sliko z uporabo browser-image-compression
- * - Omeji sirino na 750px
- * - Ohranja razmerje slike
- * - Nastavi maxSizeMB, vendar se osredotoči na dimenzijo
- *
  * @param {File} file - originalna datoteka
  * @returns {Promise<File>} - kompresirana datoteka ali originalna, če pride do napake
  */

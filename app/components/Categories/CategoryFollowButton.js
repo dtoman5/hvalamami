@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const CategoryFollowButton = ({ categoryId, initialIsFollowing, onFollowChange }) => {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);

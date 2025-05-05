@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Navbar from '@/components/Navbar'
 import HomePosts from '@/components/Posts/HomePosts'
 import PostReview from '@/components/Overlays/PostReview'

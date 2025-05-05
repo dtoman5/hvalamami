@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import UserBadge from '../User/UserBadge';
 import FollowButton from '../User/FollowButton';
 import Link from 'next/link';
