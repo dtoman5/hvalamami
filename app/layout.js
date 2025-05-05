@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
   const router = useRouter();
   const { isOpen, editingPost, closeReview } = usePostReviewStore();
 
+  // Ta useEffect je za spremljanje sprememb v avtentikaciji
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
       router.refresh();
