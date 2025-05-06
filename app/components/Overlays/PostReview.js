@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { toast } from 'react-toastify';
 import { useUploadStore } from '@/store/uploadStore';
 import { processUpload } from '@/lib/processUpload';
@@ -14,7 +14,7 @@ const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm'];
 const MAX_VIDEO_DURATION = 60;
 
 export default function PostReview({ isOpen, onClose, post, categories }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [userId, setUserId] = useState(null);
   const [profile, setProfile] = useState(null);
   const [file, setFile] = useState(null);

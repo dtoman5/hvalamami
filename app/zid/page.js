@@ -1,7 +1,9 @@
 'use client'
+
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
+
 import Navbar from '@/components/Navbar'
 import HomePosts from '@/components/Posts/HomePosts'
 import PostReview from '@/components/Overlays/PostReview'
@@ -12,7 +14,7 @@ import Link from 'next/link'
 import Sidebar from '../components/Sidebar'
 
 export default function Zid() {
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)

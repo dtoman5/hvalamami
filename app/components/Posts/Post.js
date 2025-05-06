@@ -5,13 +5,13 @@ import React, { useState, useEffect } from "react";
 import TimeAgo from "./TimeAgo";
 import UserBadge from "../User/UserBadge";
 import LikeButton from "./LikeButtons";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import { usePostReviewStore } from "@/store/postReviewStore";
 import MediaLazyLoader from "@/components/LazyLoading";
 import Link from "next/link";
 
 function Post({ post, onDelete }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);

@@ -4,12 +4,12 @@ import { Suspense, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
-const supabase = createClientComponentClient();
+const supabase = createClient();
 
 const schema = yup.object().shape({
   newPassword: yup

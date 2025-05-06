@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from '@supabase/ssr';
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
@@ -10,6 +10,7 @@ import FollowButton from "@/components/User/FollowButton";
 import Post from "@/components/Posts/Post";
 import { toast } from "react-toastify";
 import InfinityLoader from "@/components/InfiniteList";
+import { useParams } from 'next/navigation';
 
 export default function Profile({ params: paramsPromise }) {
   const supabase = createClientComponentClient();
@@ -21,7 +22,7 @@ export default function Profile({ params: paramsPromise }) {
   const [section, setSection] = useState("posts");
 
   const params = React.use(paramsPromise);
-  const { username } = params;
+  const { username } = useParams();
 
   useEffect(() => {
     let followersSubscription;

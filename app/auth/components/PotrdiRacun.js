@@ -1,11 +1,11 @@
 "use client";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-const supabase = createClientComponentClient();
+const supabase = createClient();
 
 export default function PotrdiProfil({ email }) {
   const router = useRouter();

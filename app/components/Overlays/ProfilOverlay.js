@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 export default function ProfileOverlay({ isOpen, onClose }) {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [username, setUsername] = useState(null);
 
   useEffect(() => {

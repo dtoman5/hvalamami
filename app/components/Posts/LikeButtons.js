@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import { createNotification } from "@/lib/notifications";
 
 export default function LikeButton({ postId }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [userId, setUserId] = useState(null);

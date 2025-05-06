@@ -3,18 +3,19 @@
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import { useEffect } from 'react';
+
+import { createClient } from '@/lib/supabase/client'; // ✅ pravilni uvoz
 import AuthProvider from "@/providers/AuthProvider";
 import { Providers } from '@/providers';
 import UploadNotification from '@/components/UploadNotification';
-import { useEffect } from 'react';
 import { usePostReviewStore } from "@/store/postReviewStore";
 import PostReview from '@/components/Overlays/PostReview';
 import ScrollManager from '@/components/sessionStorage';
 
 export default function RootLayout({ children }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient(); // ✅ uporabi enoten odjemalec
   const router = useRouter();
   const { isOpen, editingPost, closeReview } = usePostReviewStore();
 
@@ -44,7 +45,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           <Providers>
-            <ScrollManager /> {/* Dodaj ScrollManager tukaj */}
+            <ScrollManager />
             <UploadNotification />
             {children}
             {isOpen && (
@@ -52,7 +53,7 @@ export default function RootLayout({ children }) {
                 isOpen={isOpen}
                 post={editingPost}
                 onClose={closeReview}
-                categories={[]} // opcijsko: naloži kategorije globalno
+                categories={[]}
               />
             )}
             <ToastContainer

@@ -1,6 +1,6 @@
 +"use client";
 import React, { useEffect, useState, useCallback } from 'react';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import Post from './Post';
 import InfinityLoader from '../InfiniteList';
 
@@ -9,7 +9,7 @@ function ProfileContentNavigator({ userId, isCurrentUser, onDelete, onEdit, onRa
   const [user, setUser] = useState(null);
   const [initialData, setInitialData] = useState([]);
   const [hasFetchedInitial, setHasFetchedInitial] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const pageSize = 5;
 
   useEffect(() => {

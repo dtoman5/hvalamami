@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import FollowButton from '../User/FollowButton';
 import TimeAgo from '../Posts/TimeAgo';
 import UserBadge from '../User/UserBadge';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import InfinityLoader from '../InfiniteList';
 
 export default function ObvestilaOverlay({ isOpen, onClose }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
 

@@ -1,41 +1,7 @@
 'use client';
 import Navbar from './components/Navbar';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function UpgradeProfile() {
-  const [user, setUser] = useState(null); // Odstranili smo ":any"
-  const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
-  const router = useRouter();
-
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-        
-        if (!user) {
-          router.push('/prijava');
-        }
-      } catch (error) {
-        console.error('Error checking user:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkUser();
-  }, [supabase.auth, router]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!user) {
-    return null;
-  }
-
   return (
     <>
       <Navbar />

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import * as yup from "yup";
@@ -14,7 +14,7 @@ const schema = yup.object().shape({
 });
 
 export default function Prijava() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

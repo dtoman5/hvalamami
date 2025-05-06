@@ -1,7 +1,7 @@
 // lib/uploadToSupabaseStorage.js
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
 
-const supabase = createClientComponentClient()
+const supabase = createClient()
 
 export async function uploadToSupabaseStorage(file, path) {
   if (!file || !path) throw new Error('Missing file or path for upload.')

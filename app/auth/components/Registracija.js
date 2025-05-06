@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import Link from "next/link";
 
-const supabase = createClientComponentClient();
+const supabase = createClient();
 
 export default function Registracija() {
   const router = useRouter();

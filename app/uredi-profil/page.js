@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
@@ -44,7 +44,7 @@ const profileSchema = Yup.object().shape({
         if (!value || (this.parent.username === this.options.context?.initialUsername)) {
           return true;
         }
-        const supabase = createClientComponentClient();
+        const supabase = createClient();
         const { data } = await supabase
           .from('profiles')
           .select('username')
@@ -117,7 +117,7 @@ function checkPlatformUrl(url, platform) {
 }
 
 export default function UrediProfilComponent() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
 
   const [user, setUser] = useState(null);
@@ -177,7 +177,7 @@ export default function UrediProfilComponent() {
         };
 
         setProfile(initialProfileData);
-        setInitialProfile(initialProfileData);
+        setInitialProfile({ ...initialProfileData, socialLinks: socialMap });
         setPreviewImage(profileData.profile_picture_url || DEFAULT_AVATAR);
 
         const { data: socialData } = await supabase

@@ -1,13 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client';
 import { createNotification } from '@/lib/notifications';
 
 const FollowButton = ({ followingId, onFollowChange, center = false }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [followerId, setFollowerId] = useState(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchUser = async () => {

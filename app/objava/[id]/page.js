@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client'
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import TimeAgo from '@/components/Posts/TimeAgo';
@@ -15,7 +15,7 @@ import InfinityLoader from '@/components/InfiniteList';
 import MediaLazyLoader from '@/components/LazyLoading';
 
 export default function PostPage() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const params = useParams();
   const router = useRouter();
   const { openReview } = usePostReviewStore();

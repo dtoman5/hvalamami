@@ -4,9 +4,9 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 
-const supabase = createClientComponentClient();
+const supabase = createClient();
 
 export default function CompleteProfile() {
   const [email, setEmail] = useState('');

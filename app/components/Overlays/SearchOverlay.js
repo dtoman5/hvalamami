@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import UserBadge from '../User/UserBadge';
 import FollowButton from '../User/FollowButton';
@@ -12,7 +12,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
   const [error, setError] = useState(null);
   const [followedUsers, setFollowedUsers] = useState([]);
   const [session, setSession] = useState(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     // Pridobi trenutno sejo

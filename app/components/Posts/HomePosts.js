@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import Post from './Post';
 import { toast } from 'react-toastify';
 import InfinityLoader from '../InfiniteList';
@@ -12,7 +12,7 @@ function HomePosts({ onDelete, onEdit }) {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchUser = async () => {

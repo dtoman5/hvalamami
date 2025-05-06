@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from '@/lib/supabase/client'
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import * as yup from "yup";
@@ -15,7 +15,7 @@ const schema = yup.object().shape({
 export default function PozabljenoGesloPage() {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
 
   const {

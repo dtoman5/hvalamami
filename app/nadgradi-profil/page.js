@@ -1,12 +1,12 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 
 export default function UpgradeProfile() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const [user, setUser] = useState(null);
   const [requestedType, setRequestedType] = useState('');
   const [existingRequest, setExistingRequest] = useState(null);

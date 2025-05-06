@@ -1,15 +1,15 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import { useUploadStore } from '@/store/uploadStore';
+import { createClient } from '@/lib/supabase/client'; // ✅ nov uvoz
 
 const AppContext = createContext();
 
 export function Providers({ children }) {
   const { addUpload, updateUpload } = useUploadStore();
-  
+  const supabase = createClient(); // ✅ ustvari instanco
+
   useEffect(() => {
-    // Realtime subscription for upload status
     const channel = supabase
       .channel('upload_status')
       .on('postgres_changes', {
@@ -28,7 +28,7 @@ export function Providers({ children }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [supabase]); // ✅ dodan dependency
 
   return (
     <AppContext.Provider value={{}}>

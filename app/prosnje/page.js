@@ -1,11 +1,11 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function UpgradeRequestsAdmin() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);

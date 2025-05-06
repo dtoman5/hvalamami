@@ -1,7 +1,8 @@
-'use client';
+"use client";
+
 import React, { useEffect, useState, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useParams, useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Post from '@/components/Posts/Post';
 import { toast } from 'react-toastify';
 import InfinityLoader from '@/components/InfiniteList';
@@ -10,9 +11,10 @@ import Sidebar from '@/components/Sidebar';
 import CategoryFollowButton from '@/components/Categories/CategoryFollowButton';
 
 function CategoryPage() {
-  const { name: categoryName } = useParams();
+  const searchParams = useSearchParams();
+  const categoryName = searchParams.get('name');
   const router = useRouter();
-  const decodedCategoryName = decodeURIComponent(categoryName);
+  const decodedCategoryName = decodeURIComponent(categoryName || '');
   const [category, setCategory] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ function CategoryPage() {
   const [postCount, setPostCount] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   useEffect(() => {
     let followersSubscription;
@@ -30,16 +32,14 @@ function CategoryPage() {
       if (!decodedCategoryName) return;
       setLoading(true);
 
-      // Pridobi uporabnika
       const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError) {
+      if (userError || !user) {
         toast.error('Napaka pri pridobivanju uporabnika');
         setLoading(false);
         return;
       }
-      setUser(user?.id);
+      setUser(user.id);
 
-      // Pridobi kategorijo
       const { data: categoryData, error: categoryError } = await supabase
         .from('categories')
         .select('*')
@@ -53,59 +53,46 @@ function CategoryPage() {
       }
       setCategory(categoryData);
 
-      // Inicialni podatki
-      await updateFollowerData(categoryData.id, user?.id);
+      await updateFollowerData(categoryData.id, user.id);
       await updatePostCount(categoryData.id);
 
-      // Nastavi realtime subscription za spremembe sledilcev
       followersSubscription = supabase
         .channel(`category_followers:category_id=eq.${categoryData.id}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'category_followers',
-            filter: `category_id=eq.${categoryData.id}`
-          },
-          () => updateFollowerData(categoryData.id, user?.id)
-        )
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'category_followers',
+          filter: `category_id=eq.${categoryData.id}`
+        }, () => updateFollowerData(categoryData.id, user.id))
         .subscribe();
 
-      // Nastavi realtime subscription za spremembe objav
       postsSubscription = supabase
         .channel(`posts:category_id=eq.${categoryData.id}`)
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'posts',
-            filter: `category_id=eq.${categoryData.id}`
-          },
-          () => updatePostCount(categoryData.id)
-        )
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'posts',
+          filter: `category_id=eq.${categoryData.id}`
+        }, () => updatePostCount(categoryData.id))
         .subscribe();
 
       setLoading(false);
     };
 
     const updateFollowerData = async (categoryId, userId) => {
-      // Število sledilcev
       const { count } = await supabase
         .from('category_followers')
         .select('*', { count: 'exact', head: true })
         .eq('category_id', categoryId);
       setFollowerCount(count || 0);
 
-      // Ali uporabnik sledi kategoriji
       if (userId) {
         const { data } = await supabase
           .from('category_followers')
           .select('*')
           .eq('user_id', userId)
           .eq('category_id', categoryId)
-          .single();
+          .maybeSingle();
         setIsFollowing(!!data);
       }
     };
@@ -125,7 +112,7 @@ function CategoryPage() {
       if (followersSubscription) supabase.removeChannel(followersSubscription);
       if (postsSubscription) supabase.removeChannel(postsSubscription);
     };
-  }, [decodedCategoryName, supabase]);
+  }, [decodedCategoryName]);
 
   const fetchCategoryPosts = useCallback(
     async (cursor, pageSize) => {
@@ -153,11 +140,7 @@ function CategoryPage() {
       }
 
       const mapped = data.map(post => {
-        if (post.videos?.[0]?.thumbnail_url) {
-          post.thumbnail_preview = post.videos[0].thumbnail_url;
-        } else if (post.images?.[0]?.file_url) {
-          post.thumbnail_preview = post.images[0].file_url;
-        }
+        post.thumbnail_preview = post.videos?.[0]?.thumbnail_url || post.images?.[0]?.file_url || null;
         return post;
       });
 
@@ -167,7 +150,7 @@ function CategoryPage() {
         nextCursor: mapped.length === pageSize ? { id: last.id, created_at: last.created_at } : null
       };
     },
-    [category?.id, user, supabase]
+    [category?.id, user]
   );
 
   if (loading) return <div>Nalaganje...</div>;
