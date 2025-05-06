@@ -1,4 +1,5 @@
 // lib/processUpload.js
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
 import { generateVideoThumbnail } from './generateThumbnail';

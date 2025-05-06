@@ -1,3 +1,4 @@
+import { supabase } from './supabaseClient'; // Povezava s Supabase
 import { NextResponse } from 'next/server'; // Za vračanje odziva v Next.js
 
 // Funkcija za zakasnitev, da zmanjšamo obremenitev strežnika med poizvedbami

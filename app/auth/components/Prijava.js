@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import * as yup from "yup";
@@ -16,6 +17,7 @@ export default function Prijava() {
   const supabase = createClientComponentClient();
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -26,43 +28,56 @@ export default function Prijava() {
   });
 
   const handlePrijava = async (data) => {
-    const { error: signInError } = await supabase.auth.signInWithPassword(data);
-    if (signInError) {
-      toast.error(signInError.message);
-      return;
-    }
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    setIsLoading(true);
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword(data);
+      if (signInError) {
+        toast.error(signInError.message === "Invalid login credentials" 
+          ? "Neuspešna prijava uporabnika" 
+          : signInError.message);
+        return;
+      }
+      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
-      toast.error("Napaka pri pridobivanju uporabnika.");
-      return;
-    }
+      if (!user) {
+        toast.error("Napaka pri pridobivanju uporabnika.");
+        return;
+      }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
-    if (profile) {
-      router.push("/zid");
-    } else {
-      router.push("/zakljuci-registracijo");
+      if (profile) {
+        router.push("/zid");
+      } else {
+        router.push("/zakljuci-registracijo");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: location.origin,
-      },
-    });
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: location.origin,
+        },
+      });
 
-    if (error) {
-      toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,14 +96,19 @@ export default function Prijava() {
           </div>
           <div className="right-side-content text-center">
             <div className="right-side-logo m-t-10 m-b-2">
-              <img src="logo-hm2.png" alt="Logo" />
+              <img src="logo-hm.png" alt="Logo" />
             </div>
             <div className="right-side-text">
               <div className="p-b-3">
                 <h1>Pozdravljena <span>nazaj!</span></h1>
                 <p className="p-t-1">Prijavi se in odkrivaj svet Hvala mami</p>
               </div>
-              <button className="google-btn" onClick={handleGoogleSignIn} type="button">
+              <button 
+                className="google-btn" 
+                onClick={handleGoogleSignIn} 
+                type="button"
+                disabled={isLoading}
+              >
                 <i className="bi bi-google"></i> Nadaljuj z google računom
               </button>
               <div className="form-group m-t-2">
@@ -112,8 +132,8 @@ export default function Prijava() {
                 {errors.password && <p className="invalid-feedback">{errors.password.message}</p>}
               </div>
               <div className="form-group m-t-2 m-b-2">
-                <button className="submit-btn" type="submit">
-                  Prijava
+                <button className="submit-btn" type="submit" disabled={isLoading}>
+                  {isLoading ? "Prijavljam..." : "Prijava"}
                 </button>
               </div>
               <div className="right-side-pass m-t-2 m-b-10">

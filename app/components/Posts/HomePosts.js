@@ -1,5 +1,7 @@
 'use client';
+
 import React, { useEffect, useState, useCallback } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Post from './Post';
 import { toast } from 'react-toastify';
 import InfinityLoader from '../InfiniteList';
@@ -8,6 +10,8 @@ import SugestedUsers from '../User/SugestedUsers';
 function HomePosts({ onDelete, onEdit }) {
   const [section, setSection] = useState('followers');
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [nextCursor, setNextCursor] = useState(null);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
@@ -25,7 +29,7 @@ function HomePosts({ onDelete, onEdit }) {
         let query = supabase
           .from('posts')
           .select(`*, profiles(*), categories(*), videos(*), images(*), comments(*, profiles(*)), likes(count)`)
-          .eq('is_story', section === 'stories')
+          .eq('is_story', section === 'stories') // Preveri, če je 'stories'
           .order('created_at', { ascending: false })
           .order('id', { ascending: false })
           .limit(pageSize);
@@ -77,41 +81,70 @@ function HomePosts({ onDelete, onEdit }) {
     [section, user, supabase]
   );
 
+  useEffect(() => {
+    const storedPosts = sessionStorage.getItem(`posts-${section}`);
+    const storedCursor = sessionStorage.getItem(`cursor-${section}`);
+
+    if (storedPosts) {
+      setPosts(JSON.parse(storedPosts));
+    }
+
+    if (storedCursor) {
+      setNextCursor(JSON.parse(storedCursor));
+    } else {
+      loadPosts();
+    }
+  }, [section]);
+
+  const loadPosts = async () => {
+    const { data, nextCursor } = await fetchPosts(null, 10);
+    setPosts(data);
+    setNextCursor(nextCursor);
+    sessionStorage.setItem(`posts-${section}`, JSON.stringify(data));
+    sessionStorage.setItem(`cursor-${section}`, JSON.stringify(nextCursor));
+  };
+
+  const handleSectionChange = (newSection) => {
+    setSection(newSection);
+    // Prilagoditev za ohranjanje prejšnjih objav in kurzorja
+    loadPosts();
+  };
+
   return (
     <div className='p-b-10'>
       <div className="navigation">
-        <button className={section === 'followers' ? 'active' : ''} onClick={() => setSection('followers')}>
+        <button className={section === 'followers' ? 'active' : ''} onClick={() => handleSectionChange('followers')}>
           Objave
         </button>
-        <button className={section === 'stories' ? 'active' : ''} onClick={() => setSection('stories')}>
+        <button className={section === 'stories' ? 'active' : ''} onClick={() => handleSectionChange('stories')}>
           Zgodbe
         </button>
-        <button className={section === 'categories' ? 'active' : ''} onClick={() => setSection('categories')}>
+        <button className={section === 'categories' ? 'active' : ''} onClick={() => handleSectionChange('categories')}>
           Kategorije
         </button>
       </div>
 
       <div className='m-t-3'>
-      < SugestedUsers />
+        <SugestedUsers />
       </div>
 
       {user && (
         <InfinityLoader
-        key={section}
-        fetchItems={fetchPosts}
-        renderItem={(post) => <Post key={post.id} post={post} onDelete={onDelete} onEdit={onEdit} />}
-        pageSize={10}
-        emptyComponent={
-        <div className='no-posts text-center p-t-5'>
-        <div className='sad-f-anim'>
-          <i className="bi bi-emoji-frown"></i>
-        </div>
-          <p className="">Ni še objav za prikazati.</p>
-        </div>
-        }
-        endComponent={<p className="text-center posts-complete p-t-2 p-b-2">Ni več objav za prikaz.</p>}
-        className="post-loader-wrapper"
-        />      
+          key={section}
+          fetchItems={fetchPosts}
+          renderItem={(post) => <Post key={post.id} post={post} onDelete={onDelete} onEdit={onEdit} />}
+          pageSize={10}
+          emptyComponent={
+            <div className='no-posts text-center p-t-5'>
+              <div className='sad-f-anim'>
+                <i className="bi bi-emoji-frown"></i>
+              </div>
+              <p className="">Ni še objav za prikazati.</p>
+            </div>
+          }
+          endComponent={<p className="text-center posts-complete p-t-2 p-b-2">Ni več objav za prikaz.</p>}
+          className="post-loader-wrapper"
+        />
       )}
     </div>
   );

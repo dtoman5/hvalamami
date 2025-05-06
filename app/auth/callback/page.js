@@ -1,6 +1,8 @@
 'use client';
+
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 function AuthContent() {
   const router = useRouter();

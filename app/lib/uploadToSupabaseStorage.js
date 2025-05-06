@@ -1,4 +1,5 @@
 // lib/uploadToSupabaseStorage.js
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 const supabase = createClientComponentClient()
 

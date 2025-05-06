@@ -505,6 +505,7 @@ select {
   font-size: 17px;
   font-weight: bold;
   font-weight: 700;
+  color: black;
 }
 
 .username a {
@@ -1115,7 +1116,7 @@ select {
   width: 50%;
   height: 100vh;
   border-radius: 60px;
-  background-image: url("https://www.hajdi.si/iimg/37390/1600x/i.webp");
+  background-image: url("/slika-prijava.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -1212,11 +1213,16 @@ select {
   position: absolute;
   top: 20px;
   display: inline-flex;
-  background-color: #fafafa;
+  background-color: black;
+  color: white;
   padding: 5px 5px;
   border-radius: 30px;
   font-size: 15px;
   font-weight: 600;
+}
+
+.action-btn a {
+  color: white;
 }
 
 .action-btn-left {
@@ -2801,6 +2807,39 @@ label:active:after {
   border: none;
   font-size: 17px;
   margin-left: 10px;
+}
+
+
+.password-requirements {
+  font-family: Arial, sans-serif;
+  margin-top: 10px;
+}
+
+.password-requirements ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.password-requirements li {
+  margin-bottom: 5px;
+}
+
+.password-requirements li.valid {
+  color: green; /* Spremeni barvo besedila na zeleno, če je pogoj izpolnjen */
+}
+
+.password-requirements li .checkmark {
+  color: green; /* Barva kljukice */
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+.password-requirements li:not(.valid) {
+  color: red; /* Besedilo bo rdeče, če pogoj ni izpolnjen */
+}
+
+.password-requirements li:not(.valid) .checkmark {
+  display: none; /* Skrij kljukico, ko pogoj ni izpolnjen */
 }
 
 

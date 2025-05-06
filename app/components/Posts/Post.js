@@ -1,9 +1,11 @@
 // app/components/Posts/Post.js
 "use client";
+
 import React, { useState, useEffect } from "react";
 import TimeAgo from "./TimeAgo";
 import UserBadge from "../User/UserBadge";
 import LikeButton from "./LikeButtons";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { usePostReviewStore } from "@/store/postReviewStore";
 import MediaLazyLoader from "@/components/LazyLoading";
 import Link from "next/link";

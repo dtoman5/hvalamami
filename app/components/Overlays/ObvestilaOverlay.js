@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import FollowButton from '../User/FollowButton';
 import TimeAgo from '../Posts/TimeAgo';
 import UserBadge from '../User/UserBadge';
@@ -106,38 +107,54 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
   const shortenUsername = (username) => (username.length > 8 ? `${username.slice(0, 15)}...` : username);
 
   // Render notification item
-  const renderNotification = (n) => (
-    <div key={`${n.id}-${n.created_at}`} className={`overlay-list-notify${!n.is_read ? ' unread' : ''}`}>
-      <div className="notification-profile">
-        <div className="avatar">
-          <img src={n.source_profile?.profile_picture_url || '/default-avatar.png'} alt="avatar" />
-        </div>
-        <div className="left-nofity-info">
-          <div className="username">
-            <div className='username-m'>{n.source_profile?.username}</div>
-            <div className='username-d'>{shortenUsername(n.source_profile?.username)}</div>
-            <UserBadge userType={n.source_profile?.user_type} />
-            <div className="time"><TimeAgo timestamp={n.created_at} /></div>
+  const renderNotification = (n) => {
+    const isFollow = n.type === 'follow';
+    const userProfileLink = `/profil/${n.source_profile?.username}`; // Link do uporabniškega profila
+    const postLink = `/objava/${n.post?.id}`; // Povezava na objavo (uporabljeno tudi za zgodbe)
+
+    return (
+      // Celotno obvestilo je povezano
+      <Link 
+        href={isFollow ? userProfileLink : postLink} 
+        key={`${n.id}-${n.created_at}`} 
+        className={`overlay-list-notify${!n.is_read ? ' unread' : ''}`} // Klikljivo obvestilo, ki je tudi označeno kot neprebrano
+      >
+        <div className="notification-profile">
+          <div className="avatar">
+              <img src={n.source_profile?.profile_picture_url || '/default-avatar.png'} alt="avatar" />
           </div>
-          <div className="p-t-1">
-            {n.type === 'follow' && <span>{n.source_profile?.username} vam je začel slediti</span>}
-            {n.type === 'post' && <span>Objava je uspešno ustvarjena</span>}
-            {n.type === 'story' && <span>Zgodba je uspešno ustvarjena</span>}
-            {n.type === 'like' && <span>{n.source_profile?.username} je všečkal vašo objavo</span>}
-            {n.type === 'comment' && <span>{n.source_profile?.username} je komentiral vašo objavo</span>}
-            {n.type === 'comment_like' && <span>{n.source_profile?.username} je všečkal vaš komentar</span>}
+          <div className="left-nofity-info">
+            <div className="username">
+              {n.source_profile?.username}
+              <UserBadge userType={n.source_profile?.user_type} />
+              <div className="time"><TimeAgo timestamp={n.created_at} /></div>
+            </div>
+            <div className="p-t-1">
+              {n.type === 'follow' && <span>Mamica vam je pričela slediti</span>}
+              {n.type === 'post' && <span>Objava je uspešno ustvarjena</span>}
+              {n.type === 'story' && <span>Zgodba je uspešno ustvarjena</span>}
+              {n.type === 'like' && <span>Mamica je všeč tvoja objava</span>}
+              {n.type === 'comment' && <span>Mamica je komentirala tvojo objavo</span>}
+              {n.type === 'comment_like' && <span>Mamici je všeč tvoj komentar</span>}
+              {n.type === 'post-update' && <span>Objava uspešno urejena</span>}
+              {n.type === 'story-update' && <span>Zgodba uspešno urejena</span>}
+            </div>
           </div>
         </div>
-      </div>
-      {n.type === 'follow' ? (
-        <FollowButton followingId={n.source_profile?.id} />
-      ) : getMedia(n) && n.post?.id ? (
-        <Link href={`/objava/${n.post.id}`} className="notify-massage-post">
-          <img src={getMedia(n)} alt="media" />
-        </Link>
-      ) : null}
-    </div>
-  );
+
+        {/* Prikaz slike ali videa, če so prisotni */}
+        {n.type === 'follow' ? (
+          <FollowButton followingId={n.source_profile?.id} />
+        ) : (
+          getMedia(n) && n.post?.id ? (
+            <div className="notify-massage-post">
+              <img src={getMedia(n)} alt="media" />
+            </div>
+          ) : null
+        )}
+      </Link>
+    );
+  };
 
   if (!isOpen) return null;
 
@@ -151,14 +168,14 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
             <button className="btn-delete-not" onClick={handleClearAll}>Počisti vsa</button>
           </div>
           <div className='inner-not-bg'>
-          <InfinityLoader
-            fetchItems={fetchNotifications}
-            renderItem={renderNotification}
-            pageSize={10}
-            emptyComponent={<p className="text-center p-t-2 p-b-2">Ni obvestil.</p>}
-            endComponent={<p className="text-center p-t-2 p-b-2">Ni več obvestil za prikaz.</p>}
-            className="p-t-2"
-          />
+            <InfinityLoader
+              fetchItems={fetchNotifications}
+              renderItem={renderNotification}
+              pageSize={10}
+              emptyComponent={<p className="text-center p-t-2 p-b-2">Ni obvestil.</p>}
+              endComponent={<p className="text-center p-t-2 p-b-2">Ni več obvestil za prikaz.</p>}
+              className="p-t-2"
+            />
           </div>
         </div>
       </div>

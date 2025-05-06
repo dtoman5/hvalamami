@@ -1,4 +1,5 @@
 // app/lib/compressImage.js
+
 import imageCompression from 'browser-image-compression';
 
 /**
