@@ -5,7 +5,7 @@ import MenuOverlay from './Overlays/MenuOverlay';
 import SearchOverlay from './Overlays/SearchOverlay';
 import ObvestilaOverlay from './Overlays/ObvestilaOverlay';
 import { useState, useEffect, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -19,7 +19,7 @@ export default function Navbar() {
 
   const [profile, setProfile] = useState(undefined); // undefined = loading, null = not logged in
   const [unreadCount, setUnreadCount] = useState(0);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
 
   const fetchUserData = useCallback(async () => {

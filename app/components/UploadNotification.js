@@ -1,5 +1,6 @@
 // app/components/UploadNotification.js
 'use client';
+
 import { useUploadStore } from '@/store/uploadStore';
 
 export default function UploadNotification() {

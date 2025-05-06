@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createServerComponentClient } from '@supabase/ssr';
+import { createClient } from '@/lib/supabase/client'
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
@@ -13,7 +13,7 @@ import InfinityLoader from "@/components/InfiniteList";
 import { useParams } from 'next/navigation';
 
 export default function Profile({ params: paramsPromise }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);

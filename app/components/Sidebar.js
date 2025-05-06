@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link';
 import UserBadge from '../components/User/UserBadge';
 import FollowButton from '../components/User/FollowButton';
@@ -11,7 +11,7 @@ function Sidebar() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [session, setSession] = useState(null);
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const truncateUsername = (username, maxLength = 8) => {
     if (username.length > maxLength) {
