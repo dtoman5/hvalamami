@@ -39,6 +39,7 @@ export default function KategorijeOverlay({ isOpen, onClose }) {
           ) : (
             kategorije.map((kategorija) => (
               <Link
+                scroll={false}
                 href={`/kategorija/${encodeURIComponent(kategorija.name)}`}
                 key={kategorija.id}
                 className="category-item"

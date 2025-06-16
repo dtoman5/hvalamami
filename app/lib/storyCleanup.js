@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
-import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server';
+import { NextResponse } from 'next/server';
 
 function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function cleanupExpiredStories() {
@@ -12,7 +12,6 @@ export async function cleanupExpiredStories() {
     const pageSize = 100;
     let deletedCount = 0;
     let lastSeenId = null;
-
     let totalDeleted = 0;
     let startTime = new Date();
 
@@ -32,7 +31,7 @@ export async function cleanupExpiredStories() {
       const { error: deleteError } = await supabase
         .from('posts')
         .delete()
-        .in('id', data.map(post => post.id));
+        .in('id', data.map((post) => post.id));
 
       if (deleteError) throw deleteError;
 
@@ -41,7 +40,11 @@ export async function cleanupExpiredStories() {
       totalDeleted += data.length;
 
       if (deletedCount % 1000 === 0) {
-        console.log(`Po ${deletedCount} zgodbah, čas: ${Math.round((new Date() - startTime) / 1000)}s`);
+        console.log(
+          `Po ${deletedCount} zgodbah, čas: ${Math.round(
+            (new Date() - startTime) / 1000
+          )}s`
+        );
       }
 
       await delay(500);
@@ -50,6 +53,9 @@ export async function cleanupExpiredStories() {
     return NextResponse.json({ deletedCount: totalDeleted }, { status: 200 });
   } catch (error) {
     console.error('Napaka pri čiščenju zgodb:', error);
-    return NextResponse.json({ error: 'Failed to clean up stories' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to clean up stories' },
+      { status: 500 }
+    );
   }
 }

@@ -1,3 +1,4 @@
+// app/components/Loader/Spinner.js
 'use client';
 
 import React from 'react';

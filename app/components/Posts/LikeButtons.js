@@ -27,7 +27,7 @@ export default function LikeButton({ postId }) {
       .select("*")
       .eq("post_id", postId)
       .eq("user_id", userId)
-      .single();
+      .maybeSingle()
 
     if (data) setIsLiked(true);
   };

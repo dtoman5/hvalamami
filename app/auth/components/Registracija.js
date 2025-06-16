@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,6 +15,15 @@ export default function Registracija() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Redirect if already logged in
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        router.replace("/zid");
+      }
+    });
+  }, [router]);
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -25,7 +34,10 @@ export default function Registracija() {
       .required("Geslo je obvezno")
       .min(8, "Geslo mora imeti vsaj 8 znakov")
       .matches(/[A-Z]/, "Geslo mora vsebovati vsaj eno veliko črko")
-      .matches(/[!@#$%^&*(),.?":{}|<>]/, "Geslo mora vsebovati vsaj en poseben znak"),
+      .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Geslo mora vsebovati vsaj en poseben znak"
+      ),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "Gesli se ne ujemata")
@@ -51,7 +63,7 @@ export default function Registracija() {
       });
 
       if (!res.ok) throw new Error("Napaka pri preverjanju e-pošte");
-      
+
       const result = await res.json();
       if (result.exists) {
         toast.error("Uporabnik že obstaja. Prijavi se s klikom na prijava.");
@@ -70,7 +82,9 @@ export default function Registracija() {
       if (error) throw error;
 
       toast.success("Preverite e-pošto za potrditveno povezavo!");
-      router.push(`/potrdi-racun?email=${encodeURIComponent(data.email)}`);
+      router.push(
+        `/potrdi-racun?email=${encodeURIComponent(data.email)}`
+      );
     } catch (err) {
       toast.error(err.message || "Napaka pri registraciji");
     } finally {
@@ -86,7 +100,9 @@ export default function Registracija() {
         </div>
         <div className="right-side-page">
           <div className="action-btn">
-            <Link className="action-btn-left" href="/prijava">Prijava</Link>
+            <Link scroll={false} className="action-btn-left" href="/prijava">
+              Prijava
+            </Link>
             <div className="action-btn-right btn-active">Registracija</div>
           </div>
           <div className="right-side-content text-center">
@@ -95,10 +111,20 @@ export default function Registracija() {
             </div>
             <div className="right-side-text">
               <div className="p-b-3">
-                <h1>Pridruži se <span>svetu mamic</span></h1>
-                <p className="p-t-1"><i className="bi bi-check-lg"></i> 100% obseg objav brez algoritmov</p>
-                <p><i className="bi bi-check-lg"></i> Brez prekomernih reklam in relevantna vsebina</p>
-                <p><i className="bi bi-check-lg"></i> Deli vsebino in pomagaj</p>
+                <h1>
+                  Pridruži se <span>svetu mamic</span>
+                </h1>
+                <p className="p-t-1">
+                  <i className="bi bi-check-lg"></i> 100% obseg objav brez
+                  algoritmov
+                </p>
+                <p>
+                  <i className="bi bi-check-lg"></i> Brez prekomernih reklam in
+                  relevantna vsebina
+                </p>
+                <p>
+                  <i className="bi bi-check-lg"></i> Deli vsebino in pomagaj
+                </p>
               </div>
               <button className="google-btn" type="button">
                 <i className="bi bi-google"></i> Nadaljuj z Google računom
@@ -111,7 +137,9 @@ export default function Registracija() {
                   className={errors.email ? "is-invalid" : ""}
                   required
                 />
-                {errors.email && <p className="invalid-feedback">{errors.email.message}</p>}
+                {errors.email && (
+                  <p className="invalid-feedback">{errors.email.message}</p>
+                )}
               </div>
               <div className="form-group">
                 <input
@@ -121,7 +149,9 @@ export default function Registracija() {
                   className={errors.password ? "is-invalid" : ""}
                   required
                 />
-                {errors.password && <p className="invalid-feedback">{errors.password.message}</p>}
+                {errors.password && (
+                  <p className="invalid-feedback">{errors.password.message}</p>
+                )}
               </div>
               <div className="form-group m-b-2">
                 <input
@@ -131,15 +161,25 @@ export default function Registracija() {
                   className={errors.confirmPassword ? "is-invalid" : ""}
                   required
                 />
-                {errors.confirmPassword && <p className="invalid-feedback">{errors.confirmPassword.message}</p>}
+                {errors.confirmPassword && (
+                  <p className="invalid-feedback">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
               <div className="form-group m-b-2">
-                <button className="submit-btn" type="submit" disabled={isLoading}>
+                <button
+                  className="submit-btn"
+                  type="submit"
+                  disabled={isLoading}
+                >
                   {isLoading ? "Ustvarjam račun..." : "Registracija"}
                 </button>
               </div>
               <div className="right-side-term m-b-10">
-                Z registracijo sprejemate <a href="">Splošne pogoje uporabe</a> te spletne strani in potrjujete, da ste prebrali in razumeli Politiko zasebnosti.
+                Z registracijo sprejemate{" "}
+                <a href="">Splošne pogoje uporabe</a> te spletne strani in
+                potrjujete, da ste prebrali in razumeli Politiko zasebnosti.
               </div>
             </div>
           </div>

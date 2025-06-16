@@ -10,6 +10,45 @@ a {
   text-decoration: none!important;
 }
 
+/* FIRST PAGE */
+.relative-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+}
+.r-container-l {
+  position: absolute;
+  left: 0;
+  width: 50%;
+  height: 100vh;
+}
+.conteiner-img-1 {
+  background-image: url(/slika-prijava.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.conteiner-img-2 {
+  background-image: url("https://opine-homepage.s3.eu-west-1.amazonaws.com/Workflow-landing-page/workflow-share.mp4");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.relative-container-bg-r {
+  background-color: #fdd9d9;
+}
+.r-container-r {
+  position: absolute;
+  width: 50%;
+  top: 0;
+  right: 0;
+}
+
+/* LOADER PAGE */
+.loading-logo {
+  height: 110px;
+}
+
 /*yup*/
 .invalid-feedback {
   color: #ffffff;
@@ -51,6 +90,132 @@ option:hover {
 {
   background-color: #000000;
   border: 2px solid #555555;
+}
+
+/* TOAST */
+
+/* -------------------------------------------- */
+/* 1) Osnovni toast (vse vrste)                */
+/* -------------------------------------------- */
+.Toastify__toast {
+  /* Polprozorno sivo ozadje (25% opacity) */
+  background-color: rgb(210 210 210 / 25%) !important;
+
+  /* Črna barva besedila */
+  color: rgb(0, 0, 0) !important;
+
+  /* Blur efekt za ozadje toast-a */
+  -webkit-backdrop-filter: blur(13.5px) !important;
+  backdrop-filter: blur(13.5px) !important;
+
+  /* Zaobljeni robovi */
+  border-radius: 15px !important;
+
+  /* Privzeti trak na levi je prozoren (kasneje prepišemo za posamezne tipe) */
+  border-left: 4px solid transparent !important;
+
+  /* Rahla senca */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+
+  /* Flex za poravnavo vsebine in gumbov */
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem !important;
+  font-weight: 500;
+}
+
+.Toastify__toast--success .Toastify__progress-bar {
+  background: #000000 !important; /* zelena */
+}
+
+.Toastify__toast--error .Toastify__progress-bar {
+  background: #a90505 !important; /* rdeča */
+}
+
+.Toastify__toast--warning .Toastify__progress-bar {
+  background: #000000 !important;
+}
+
+.Toastify__toast--info .Toastify__progress-bar {
+  background: #000000 !important;
+}
+
+/* -------------------------------------------- */
+/* 3) Ikone znotraj toast-a                     */
+/* -------------------------------------------- */
+.Toastify__toast .Toastify__toast-icon svg {
+  /* Nastavi barvo ikone, da se ujema s črno besedila ali po potrebi prilagodi */
+  fill: rgb(0, 0, 0) !important;
+}
+
+/* -------------------------------------------- */
+/* 4) Gumb “zapri” (X) v toast-u                */
+/* -------------------------------------------- */
+.Toastify__close-button {
+  color: rgb(0, 0, 0) !important;
+  opacity: 0.6;
+  background: none !important;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* -------------------------------------------- */
+/* 5) Container za toast-e (postavitev)         */
+/* -------------------------------------------- */
+.Toastify__toast-container {
+  position: fixed!important;
+  bottom: 15px !important;
+  right: 15px !important;
+  left: auto !important;
+  bottom: auto !important;
+
+  /* Razmik med toast-i */
+  gap: 0.75rem !important;
+}
+
+.Toastify__progress-bar--success {
+  background: black!important;
+}
+
+.Toastify__progress-bar--error {
+  background: black!important;
+}
+
+.Toastify__progress-bar--warning {
+  background: black!important;
+}
+
+.Toastify__progress-bar--info {
+  background: black!important;
+}
+
+/* -------------------------------------------- */
+/* 6) Animacije (vstop/izstop)                 */
+/* -------------------------------------------- */
+.Toastify__toast--animate {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: Toastify__slideIn 200ms forwards;
+}
+
+@keyframes Toastify__slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Toastify__toast--exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.Toastify__toast--exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 200ms ease, transform 200ms ease;
 }
 
 /* H1 za dashboard intro */
@@ -106,6 +271,14 @@ p {
 
 .position-center {
   margin: 0 auto;
+}
+
+.position-center-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 /* ZA VSE INPUTE BREZ FOKUSA */
@@ -261,6 +434,30 @@ select {
   padding-right: 30px;
 }
 
+.m-l-1 {
+  margin-left: 10px;
+}
+
+.m-l-2 {
+  padding-left: 20px;
+}
+
+.m-l-3 {
+  margin-left: 30px;
+}
+
+.m-r-1 {
+  margin-right: 10px;
+}
+
+.m-r-2 {
+  margin-right: 20px;
+}
+
+.m-r-3 {
+  margin-right: 30px;
+}
+
 .padding-none {
   padding: 0!important;
 }
@@ -278,7 +475,6 @@ select {
   width: 100%;
   height: 70px;
   backdrop-filter: blur(13.5px);
-  border-bottom: solid 1px #dcdcdc;
   z-index: 99;
 }
 
@@ -289,6 +485,10 @@ select {
 
 .navbar-left img {
   height: 50px;
+}
+
+.logo {
+  cursor: pointer;
 }
 
 .hamburger-menu {
@@ -749,7 +949,7 @@ select {
 }
 
 .row {
-  max-width: 750px;
+  width: 750px;
   margin: 0 auto;
 }
 
@@ -788,8 +988,19 @@ select {
   padding: 10px 20px;
   font-weight: 600;
   text-decoration: none;
-  border-radius: 20px;
+  border-radius: 40px;
   background-color: black;
+  border: none;
+}
+
+.btn-2 {
+  font-size: 16px;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 20px;
+  background-color: red;
   border: none;
 }
 
@@ -803,7 +1014,6 @@ select {
   overflow-x: auto;
   z-index: 50;
   background: white;
-  border-left: solid 1px #dcdcdc;
 }
 
 .sidebar-content {
@@ -891,6 +1101,7 @@ select {
   width: 180px;
   left: 15px;
   color: white;
+  z-index: 9999999;
 }
 
 .user-post {
@@ -1115,7 +1326,6 @@ select {
   top: 0;
   width: 50%;
   height: 100vh;
-  border-radius: 60px;
   background-image: url("/slika-prijava.jpg");
   background-size: cover;
   background-repeat: no-repeat;
@@ -1426,7 +1636,7 @@ select {
 }
 
 .navigation button {
-  width: 50%;
+  width: 100%;
 }
 
 .navigation button {
@@ -1458,14 +1668,15 @@ select {
 .posts {
   box-sizing: border-box;
   width: 100%;
-  padding: 40px 70px;
+  padding-left: 70px;
+  padding-right: 70px;
+  padding-top: 30px;
   background-color: #ffffff;
 }
 
 .posts-content {
   background-color: white;
-  border-bottom: solid 1px rgb(179, 179, 179);
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 
 .posts-info {
@@ -1743,8 +1954,6 @@ select {
 .row-bg {
   box-sizing: border-box;
   padding-top: 20px;
-  background-color: #fafafa;
-  border-radius: 60px;
 }
 
 .row-inner-nbg {
@@ -1759,9 +1968,14 @@ select {
   border: solid 1px #dcdcdc;
 }
 
+.row-inner-bg-p {
+  padding-top: 30px;
+  padding-left: 30px;
+}
+
 .user-type {
   box-sizing: border-box;
-  display: inline-flex;
+  display: inline-block;
   width: 100%;
 }
 
@@ -1825,8 +2039,8 @@ select {
   box-sizing: border-box;
   position: fixed;
   bottom: 0;
-  left: calc(50% - 375px);
-  width: 750px;
+  left: calc(50% - 325px);
+  width: 650px;
   margin: 0 auto;
   padding: 10px;
   border-radius: 40px;
@@ -2842,6 +3056,70 @@ label:active:after {
   display: none; /* Skrij kljukico, ko pogoj ni izpolnjen */
 }
 
+
+.btn-comm-report {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.btn-comm-report:hover {
+  color: #f00;
+}
+
+.btn-comm-report:disabled {
+  color: #f00;
+  cursor: not-allowed;
+}
+
+.share-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.share-notification.success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.share-notification.info {
+  background-color: #2196F3;
+  color: white;
+}
+
+.share-notification.error {
+  background-color: #f44336;
+  color: white;
+}
+
+/* NADGRADI PROFIL */
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 60px;
+  border: solid 1px #dcdcdc;
+  text-align: center;
+}
+.alert-error {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+.loading {
+  text-align: center;
+  padding: 20px;
+}
+.upgrade-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
 /* ZA TELEFON */
 

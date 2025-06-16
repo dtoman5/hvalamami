@@ -1,99 +1,121 @@
+// app/components/User/FollowButton.js
 'use client';
-import { useState, useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { createNotification } from '@/lib/notifications';
+import { useFeedStore } from '@/store/feedStore';
+import Spinner from '@/components/Loader/Spinner';
 
-const FollowButton = ({ followingId, onFollowChange, center = false }) => {
+export default function FollowButton({
+  followingId,
+  onFollowChange,
+  center = false,
+  small = false,
+}) {
+  const supabase = createClient();
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [followerId, setFollowerId] = useState(null);
-  const supabase = createClient();
 
+  // 1) Load current user + follow state
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
+    (async () => {
+      const { data: { user }, error: userErr } = await supabase.auth.getUser();
+      if (userErr) {
+        console.error('Error fetching session user:', userErr.message);
+      } else if (user) {
         setFollowerId(user.id);
-        checkIfFollowing(user.id);
+        const { data, error } = await supabase
+          .from('user_follows')
+          .select('follower_id')
+          .eq('follower_id', user.id)
+          .eq('following_id', followingId)
+          .maybeSingle();
+        if (error) {
+          console.error('Error checking follow state:', error.message);
+        } else {
+          setIsFollowing(!!data);
+        }
       }
       setIsLoading(false);
-    };
-    fetchUser();
-  }, []);
+    })();
+  }, [followingId, supabase]);
 
-  const checkIfFollowing = async (userId) => {
-    const { data } = await supabase
-      .from('user_follows')
-      .select('*')
-      .eq('follower_id', userId)
-      .eq('following_id', followingId)
-      .single();
-
-    setIsFollowing(!!data);
-  };
-
+  // 2) handle follow/unfollow
   const handleFollow = async () => {
     if (!followerId || isLoading) return;
-
     setIsLoading(true);
-    const newIsFollowing = !isFollowing;
 
     try {
       if (isFollowing) {
+        // Unfollow
         const { error } = await supabase
           .from('user_follows')
           .delete()
           .eq('follower_id', followerId)
           .eq('following_id', followingId);
-
         if (error) throw error;
       } else {
+        // Follow
         const { error } = await supabase
           .from('user_follows')
-          .insert([{
+          .insert({
             follower_id: followerId,
             following_id: followingId,
-            created_at: new Date().toISOString()
-          }]);
-
+            created_at: new Date().toISOString(),
+          });
         if (error) throw error;
 
         await createNotification({
           type: 'follow',
           user_id: followingId,
-          source_user_id: followerId
+          source_user_id: followerId,
         });
       }
 
-      setIsFollowing(newIsFollowing);
-      if (onFollowChange) onFollowChange();
-    } catch (error) {
-      console.error('Napaka pri sledenju:', error.message);
+      const nextState = !isFollowing;
+      setIsFollowing(nextState);
+      onFollowChange?.(nextState);
+
+      // reset feeds so they re-fetch immediately
+      const resetFollowers = useFeedStore.getState().resetSection.bind(null, 'feed:followers');
+      const resetStories   = useFeedStore.getState().resetSection.bind(null, 'feed:stories');
+      resetFollowers();
+      resetStories();
+      window.dispatchEvent(new CustomEvent('force-fetch', { detail: 'feed:followers' }));
+      window.dispatchEvent(new CustomEvent('force-fetch', { detail: 'feed:stories' }));
+    } catch (err) {
+      console.error('Napaka pri sledenju:', err.message || err);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const btnClasses = [
+    'follow-button',
+    isFollowing ? 'following' : 'not-following',
+    small ? 'small-btn' : 'large-btn',
+    isLoading ? 'loading' : '',
+    center ? 'position-center' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <button
-      onClick={handleFollow}
-      disabled={isLoading || !followerId}
-      className={`
-        follow-button 
-        ${isFollowing ? 'following' : 'not-following'} 
-        ${isLoading ? 'loading' : ''} 
-        ${center ? 'position-center' : ''}
-      `}
-    >
+    <button onClick={handleFollow} disabled={isLoading || !followerId} className={btnClasses}>
       {isLoading ? (
-        <div className="spinner"></div>
+        <Spinner size={12} />
       ) : isFollowing ? (
-        <><i className="bi bi-people"></i> Slediš</>
+        <>
+          <i className="bi bi-people"></i> Slediš
+        </>
       ) : (
-        <><i className="bi bi-person-plus"></i> Sledi</>
+        <>
+          <i className="bi bi-person-plus"></i> Sledi
+        </>
       )}
     </button>
   );
-};
-
-export default FollowButton;
+}

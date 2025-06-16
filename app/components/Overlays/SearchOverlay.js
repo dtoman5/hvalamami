@@ -172,7 +172,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
               <div key={user.id} className="overlay-list-notify">
                 <div className="notification-profile" onClick={onClose}>
                   <div className="avatar">
-                    <Link href={`/profil/${user.username}`}>
+                    <Link scroll={false} href={`/profil/${user.username}`}>
                     <img 
                       src={user.profile_picture_url || 'https://newprofilepic.photo-cdn.net//assets/images/article/profile.jpg?90af0c8'} 
                       alt={user.username}
@@ -184,7 +184,7 @@ export default function SearchOverlay({ isOpen, onClose }) {
                   </div>
                   <div className="left-nofity-info">
                     <div className="username">
-                      <Link href={`/profil/${user.username}`} className='posts-username'>{user.username}</Link>
+                      <Link scroll={false} href={`/profil/${user.username}`} className='posts-username'>{user.username}</Link>
                       <UserBadge userType={user.user_type} />
                       {user.is_verified && <i className="bi bi-patch-check-fill verified-badge"></i>}
                     </div>

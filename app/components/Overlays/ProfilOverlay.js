@@ -45,13 +45,13 @@ export default function ProfileOverlay({ isOpen, onClose }) {
         <ul>
           <li>
             {username ? (
-              <Link href={`/profil/${username}`}>Moj profil</Link>
+              <Link scroll={false} href={`/profil/${username}`}>Moj profil</Link>
             ) : (
               <span style={{ opacity: 0.6 }}>Nalagam...</span>
             )}
           </li>
           <li>
-            <Link href="/uredi-profil">Uredi profil</Link>
+            <Link scroll={false} href="/uredi-profil">Uredi profil</Link>
           </li>
           <li>
             <a onClick={handleSignOut} style={{ color: 'red', cursor: 'pointer' }}>

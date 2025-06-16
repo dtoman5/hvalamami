@@ -137,7 +137,7 @@ export default function PotrdiProfil({ email }) {
             <h1 className="m-b-1">Potrdi svoj račun</h1>
             <p className="m-b-1">
               Na e-pošto <strong>{email}</strong> smo poslali potrditveno sporočilo.
-              Preverite svojo e-pošto – povezava v sporočilu vas bo vodila na stran <Link href="/prijava">Prijava</Link>.
+              Preverite svojo e-pošto – povezava v sporočilu vas bo vodila na stran <Link scroll={false} href="/prijava">Prijava</Link>.
             </p>
             <p className="m-b-1">
               Če niste prejeli e-pošte, lahko ponovno pošljete potrditveno sporočilo.

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState, useEffect } from "react";
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from "next/navigation";
@@ -16,8 +16,16 @@ const schema = yup.object().shape({
 export default function Prijava() {
   const supabase = createClient();
   const router = useRouter();
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        router.replace("/zid");
+      }
+    });
+  }, [supabase, router]);
 
   const {
     register,
@@ -32,12 +40,14 @@ export default function Prijava() {
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword(data);
       if (signInError) {
-        toast.error(signInError.message === "Invalid login credentials" 
-          ? "Neuspešna prijava uporabnika" 
-          : signInError.message);
+        toast.error(
+          signInError.message === "Invalid login credentials"
+            ? "Neuspešna prijava uporabnika"
+            : signInError.message
+        );
         return;
       }
-      
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -68,14 +78,9 @@ export default function Prijava() {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: location.origin,
-        },
+        options: { redirectTo: location.origin },
       });
-
-      if (error) {
-        toast.error(error.message);
-      }
+      if (error) toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -89,10 +94,10 @@ export default function Prijava() {
         </div>
         <div className="right-side-page">
           <div className="action-btn">
-            <div className="action-btn-left btn-active">
-              Prijava
-            </div>
-            <Link className="action-btn-right" href="/registracija">Registracija</Link>
+            <div className="action-btn-left btn-active">Prijava</div>
+            <Link scroll={false} className="action-btn-right" href="/registracija">
+              Registracija
+            </Link>
           </div>
           <div className="right-side-content text-center">
             <div className="right-side-logo m-t-10 m-b-2">
@@ -100,12 +105,14 @@ export default function Prijava() {
             </div>
             <div className="right-side-text">
               <div className="p-b-3">
-                <h1>Pozdravljena <span>nazaj!</span></h1>
+                <h1>
+                  Pozdravljena <span>nazaj!</span>
+                </h1>
                 <p className="p-t-1">Prijavi se in odkrivaj svet Hvala mami</p>
               </div>
-              <button 
-                className="google-btn" 
-                onClick={handleGoogleSignIn} 
+              <button
+                className="google-btn"
+                onClick={handleGoogleSignIn}
                 type="button"
                 disabled={isLoading}
               >
@@ -129,7 +136,9 @@ export default function Prijava() {
                   className={errors.password ? "is-invalid" : ""}
                   required
                 />
-                {errors.password && <p className="invalid-feedback">{errors.password.message}</p>}
+                {errors.password && (
+                  <p className="invalid-feedback">{errors.password.message}</p>
+                )}
               </div>
               <div className="form-group m-t-2 m-b-2">
                 <button className="submit-btn" type="submit" disabled={isLoading}>
@@ -137,7 +146,10 @@ export default function Prijava() {
                 </button>
               </div>
               <div className="right-side-pass m-t-2 m-b-10">
-                Pozabljeno geslo? <Link href="/pozabljeno-geslo">Obnovi</Link>
+                Pozabljeno geslo?{" "}
+                <Link scroll={false} href="/pozabljeno-geslo">
+                  Obnovi
+                </Link>
               </div>
             </div>
           </div>

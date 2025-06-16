@@ -31,7 +31,7 @@ export default function LikeComment({ commentId }) {
       .select("*")
       .eq("comment_id", commentId)
       .eq("user_id", userId)
-      .single();
+      .maybeSingle()
 
     if (data) setIsLiked(true);
   };
@@ -50,7 +50,7 @@ export default function LikeComment({ commentId }) {
       .from("comments")
       .select("user_id, post_id")
       .eq("id", commentId)
-      .single();
+      .maybeSingle()
     return data;
   };
 
@@ -76,7 +76,7 @@ export default function LikeComment({ commentId }) {
           .from("comment_likes")
           .insert([{ comment_id: commentId, user_id: userId, created_at: new Date().toISOString() }])
           .select()
-          .single();
+          .maybeSingle()
 
         if (error) throw error;
 

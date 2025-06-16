@@ -1,10 +1,10 @@
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function POST(req) {
   const { email } = await req.json();
   
   try {
-    const supabase = createServerClient();
+    const supabase = createAdminClient();
 
     let allUsers = [];
     let page = 1;
@@ -12,7 +12,6 @@ export async function POST(req) {
 
     while (hasMore) {
       const { data, error } = await supabase.auth.admin.listUsers({ page });
-      
       if (error) throw error;
 
       allUsers = [...allUsers, ...data.users];
@@ -20,8 +19,8 @@ export async function POST(req) {
       hasMore = data.users.length === 1000;
     }
 
-    const userExists = allUsers.some(user => 
-      user.email.toLowerCase() === email.toLowerCase()
+    const userExists = allUsers.some(
+      user => user.email.toLowerCase() === email.toLowerCase()
     );
 
     return new Response(JSON.stringify({ exists: userExists }), { 

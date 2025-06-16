@@ -54,7 +54,7 @@ export default function PozabljenoGesloPage() {
               Poslali smo vam povezavo za ponastavitev gesla.
               Če e-poštnega sporočila ne najdete, preverite mapo »Nezaželena pošta«.
             </p>
-            <Link href="/prijava" className="submit-btn">
+            <Link scroll={false} href="/prijava" className="submit-btn">
               Nazaj na prijavo
             </Link>
           </div>
@@ -99,7 +99,7 @@ export default function PozabljenoGesloPage() {
             </div>
             
             <div className="text-center m-t-2">
-              <Link href="/prijava" className="text-muted">
+              <Link scroll={false} href="/prijava" className="text-muted">
                 Nazaj na prijavo
               </Link>
             </div>

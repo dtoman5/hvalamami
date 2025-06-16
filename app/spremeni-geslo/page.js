@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client';
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -33,7 +33,7 @@ export default function SpremeniGesloPage() {
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  
+
   const {
     register,
     handleSubmit,
@@ -43,49 +43,44 @@ export default function SpremeniGesloPage() {
   });
 
   useEffect(() => {
-    const checkUser = async () => {
+    (async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
       if (error || !user) {
-        router.push("/prijava"); // Preusmeri uporabnika na ponovno prijavo
+        router.push("/prijava");
       }
-    };
-
-    checkUser();
+    })();
   }, [supabase, router]);
 
   const onSubmit = async (data) => {
     setLoading(true);
+    setErrorMessage("");
     try {
-      const { data: { user }, error: loginError } = await supabase.auth.getUser();
-
-      if (loginError || !user) {
+      const { data: { user }, error: sessionError } = await supabase.auth.getUser();
+      if (sessionError || !user) {
         setErrorMessage("Uporabnik ni prijavljen.");
         return;
       }
 
-      // Preverjanje s starim geslom
-      const { error: loginErrorPassword } = await supabase.auth.signInWithPassword({
-        email: user.email,  // Email že pridobljen iz seje
+      // re-authenticate
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: user.email,
         password: data.oldPassword,
       });
-
-      if (loginErrorPassword) {
+      if (authError) {
         setErrorMessage("Napačno staro geslo.");
-        toast.error("Napačno staro geslo.");
         return;
       }
 
-      // Posodobi geslo
-      const { error } = await supabase.auth.updateUser({
+      // update password
+      const { error: updateError } = await supabase.auth.updateUser({
         password: data.newPassword,
       });
-
-      if (error) throw error;
+      if (updateError) throw updateError;
 
       toast.success("Geslo uspešno posodobljeno!");
-      router.push("/geslo-zamenjano"); // Preusmeri na stran za potrditve
-    } catch (error) {
-      toast.error(error.message || "Napaka pri posodabljanju gesla");
+      router.push("/geslo-zamenjano");
+    } catch (err) {
+      toast.error(err.message || "Napaka pri posodabljanju gesla");
     } finally {
       setLoading(false);
     }
@@ -93,64 +88,62 @@ export default function SpremeniGesloPage() {
 
   return (
     <div>
-        < Navbar />
+      <Navbar />
       <div className="center-position">
         <div className="right-side-content">
-          <div className="right-side-text"></div>
-      <h1 className="m-b-1">Spremeni geslo</h1>
-      <p>Vpiši staro geslo in novo geslo, da ga spremeniš.</p>
+          <h1 className="m-b-1">Spremeni geslo</h1>
+          <p>Vpiši staro geslo in novo geslo, da ga spremeniš.</p>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Vpiši staro geslo"
-            {...register("oldPassword")}
-            className={errors.oldPassword ? "is-invalid" : ""}
-          />
-          {errors.oldPassword && (
-            <p className="invalid-feedback">{errors.oldPassword.message}</p>
-          )}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-group">
+              <input
+                type="password"
+                placeholder="Vpiši staro geslo"
+                {...register("oldPassword")}
+                className={errors.oldPassword || errorMessage ? "is-invalid" : ""}
+              />
+              {errors.oldPassword && (
+                <p className="invalid-feedback">{errors.oldPassword.message}</p>
+              )}
+              {!errors.oldPassword && errorMessage && (
+                <p className="invalid-feedback">{errorMessage}</p>
+              )}
+            </div>
+
+            <div className="form-group m-t-3">
+              <input
+                type="password"
+                placeholder="Vpiši novo geslo"
+                {...register("newPassword")}
+                className={errors.newPassword ? "is-invalid" : ""}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {errors.newPassword && (
+                <p className="invalid-feedback">{errors.newPassword.message}</p>
+              )}
+              <PasswordStrengthIndicator password={password} />
+            </div>
+
+            <div className="form-group m-b-2">
+              <input
+                type="password"
+                placeholder="Ponovno vpiši novo geslo"
+                {...register("confirmPassword")}
+                className={errors.confirmPassword ? "is-invalid" : ""}
+              />
+              {errors.confirmPassword && (
+                <p className="invalid-feedback">{errors.confirmPassword.message}</p>
+              )}
+            </div>
+
+            <div className="form-group m-b-2">
+              <button className="submit-btn" type="submit" disabled={loading}>
+                {loading ? "Posodabljanje..." : "Ponastavi geslo"}
+              </button>
+            </div>
+          </form>
         </div>
-
-        <div className="form-group m-t-3">
-          <input
-            type="password"
-            placeholder="Vpiši novo geslo"
-            {...register("newPassword")}
-            className={errors.newPassword ? "is-invalid" : ""}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errors.newPassword && (
-            <p className="invalid-feedback">{errors.newPassword.message}</p>
-          )}
-          <PasswordStrengthIndicator password={password} />
-        </div>
-
-        <div className="form-group m-b-2">
-          <input
-            type="password"
-            placeholder="Ponovno vpiši novo geslo"
-            {...register("confirmPassword")}
-            className={errors.confirmPassword ? "is-invalid" : ""}
-          />
-          {errors.confirmPassword && (
-            <p className="invalid-feedback">
-              {errors.confirmPassword.message}
-            </p>
-          )}
-        </div>
-
-        <div className="form-group m-b-2">
-          <button className="submit-btn" type="submit" disabled={loading}>
-            {loading ? "Posodabljanje..." : "Ponastavi geslo"}
-          </button>
-        </div>
-      </form>
-
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-    </div>
-    </div>
+      </div>
     </div>
   );
 }

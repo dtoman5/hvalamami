@@ -163,7 +163,6 @@ export async function processUpload({
       }
     }
 
-    toast.success(editingPostId ? 'Objava uspešno posodobljena' : 'Objava uspešno ustvarjena');
   } catch (error) {
     console.error('Napaka pri nalaganju objave:', error);
     toast.error('Napaka: ' + error.message);
