@@ -3137,6 +3137,9 @@ label:active:after {
   .container-content {
     width: 100%;
   }
+  .row {
+    width: 100%;
+  }
   .avatar {
     width: 30px;
     height: 30px;
