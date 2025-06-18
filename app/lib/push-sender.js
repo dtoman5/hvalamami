@@ -1,57 +1,64 @@
 // lib/push-sender.js
-import admin from 'firebase-admin';
-import { createClient as createAdminClient } from '@supabase/supabase-js';
+import admin from 'firebase-admin'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 
+// Initialize Firebase Admin once
 if (!admin.apps.length) {
-  if (
-    !process.env.FIREBASE_PROJECT_ID ||
-    !process.env.FIREBASE_CLIENT_EMAIL ||
-    !process.env.FIREBASE_PRIVATE_KEY
-  ) {
-    throw new Error('Missing Firebase admin credentials');
-  }
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
     }),
-  });
+  })
 }
+const fcm = admin.messaging()
 
-const fcm = admin.messaging();
+// Supabase “admin” client
 const supabaseAdmin = createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+)
 
+/**
+ * Pošlje push vsem napravam danega user_id
+ */
 export async function sendPush({ user_id, source_profile_username, type, id }) {
+  // ... (tvoja obstoječa koda za user-specific)
+}
+
+/**
+ * Broadcast — pošlji vsem v push_subscriptions
+ */
+export async function sendBroadcast({ title, body, data = {} }) {
+  // 1) poberi vse zapise
   const { data: subs, error } = await supabaseAdmin
     .from('push_subscriptions')
     .select('subscription')
-    .eq('user_id', user_id);
 
   if (error) {
-    console.error('Failed to fetch push_subscriptions:', error);
-    return;
+    console.error('❌ fetch subs failed:', error)
+    return
+  }
+  const tokens = (subs || []).map(r => r.subscription).filter(Boolean)
+  if (!tokens.length) {
+    console.log('ℹ️ Ni nobenih subscription tokenov')
+    return
   }
 
-  const tokens = (subs || []).map(r => r.subscription).filter(Boolean);
-  if (!tokens.length) return;
-
+  // 2) sestavi payload
   const payload = {
-    notification: { title: 'Novo obvestilo', body: 'Imaš novo obvestilo' },
+    notification: { title, body },
     data: {
-      url: `/profil/${source_profile_username || ''}`,
-      type: type || '',
-      id: String(id || ''),
-    },
-  };
+      ...data
+    }
+  }
 
+  // 3) pošlji
   try {
-    const response = await fcm.sendToDevice(tokens, payload);
-    console.log('✅ FCM send response:', response);
+    const resp = await fcm.sendToDevice(tokens, payload)
+    console.log('✅ broadcast sent', resp)
   } catch (err) {
-    console.error('❌ Error sending push via FCM:', err);
+    console.error('❌ broadcast error', err)
   }
 }
