@@ -1,81 +1,69 @@
 'use client';
-
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { messaging } from '@/lib/firebase';
 
 export default function PrejmiObvestilaPage() {
   const supabase = createClient();
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [status, setStatus] = useState('idle'); // 'idle' | 'prompted' | 'granted' | 'denied'
 
-  // 1) Preusmeri, če ni prijavljen
   useEffect(() => {
     (async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) {
-        router.replace('/prijava');
-      } else {
-        setUser(user);
-      }
-    })();
-  }, [supabase, router]);
+      if (!user) return router.push('/prijava');
 
-  // 2) S klikom sproži browser dialog za dovoljenja in shrani token
-  const handleEnable = async () => {
-    setStatus('prompted');
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      setStatus('granted');
-      try {
-        // registriraj Service Worker
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-        // dinamično naloži Firebase Messaging
-        const { getMessaging, getToken } = await import('firebase/messaging');
-        const { messaging } = await import('@/lib/firebase');
-        const fcmToken = await getToken(messaging, {
-          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-          serviceWorkerRegistration: registration,
-        });
-        if (fcmToken && user) {
-          await supabase
+      console.log('▶️ Requesting Notification permission...');
+      const perm = await Notification.requestPermission();
+      console.log('▶️ Notification permission:', perm);
+      if (perm !== 'granted') return;
+
+      console.log('▶️ Registering Service Worker...');
+      const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      console.log('▶️ SW registered:', reg);
+
+      console.log('▶️ Retrieving FCM token...');
+      const token = await getToken(messaging, {
+        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+        serviceWorkerRegistration: reg,
+      });
+      console.log('▶️ FCM token:', token);
+
+      if (token) {
+        const { count } = await supabase
+          .from('push_subscriptions')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('subscription', token);
+        console.log('▶️ existing count:', count);
+
+        if (count === 0) {
+          console.log('▶️ Inserting new subscription...');
+          const { error } = await supabase
             .from('push_subscriptions')
-            .upsert({ user_id: user.id, subscription: fcmToken });
+            .insert({ user_id: user.id, subscription: token });
+          console.log('▶️ insert error?', error);
+        } else {
+          console.log('▶️ token already stored');
         }
-      } catch (err) {
-        console.error('Napaka pri registraciji push:', err);
       }
-    } else {
-      setStatus('denied');
-    }
-  };
+    })().catch(console.error);
+  }, [router, supabase]);
 
-  if (!user) {
-    return <p>Preverjam prijavo…</p>;
-  }
+  // handle foreground messages
+  useEffect(() => {
+    onMessage(messaging, (payload) => {
+      console.log('🔔 foreground message:', payload);
+      // optionally: new Notification(...)
+    });
+  }, []);
 
   return (
     <div className="center-position">
-      <h1 className="m-b-2">Prejmi push obvestila</h1>
-
-      {status === 'idle' && (
-        <button className="btn-1" onClick={handleEnable}>
-          Omogoči obvestila
-        </button>
-      )}
-      {status === 'prompted' && <p>Odprt je dialog brskalnika za dovoljenja…</p>}
-      {status === 'granted' && <p>Dovoljenje podeljeno! Hvala.</p>}
-      {status === 'denied' && (
-        <>
-          <p>Dovoljenje zavrnjeno. Obvestila ne bodo delovala.</p>
-          <button className="btn-1" onClick={handleEnable}>
-            Poskusi znova
-          </button>
-        </>
-      )}
+      <p>Pridobivam obvestila… poglej konzolo za napredek.</p>
     </div>
   );
 }
