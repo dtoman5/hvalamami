@@ -9,11 +9,25 @@ import UploadNotification from '@/components/UploadNotification';
 import { usePostReviewStore } from '@/store/postReviewStore';
 import PostReview from '@/components/Overlays/PostReview';
 import FullPageLoader from '@/components/FullPageLoader';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 
 export default function RootLayout({ children }) {
   const supabase = createClient();
   const { isOpen, editingPost, closeReview } = usePostReviewStore();
+
+  // Register the service worker for Firebase Messaging
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then((reg) => {
+          console.log('Service worker registered with scope:', reg.scope);
+        })
+        .catch((err) => {
+          console.error('Service worker registration failed:', err);
+        });
+    }
+  }, []);
 
   return (
     <html lang="sl">
@@ -28,6 +42,7 @@ export default function RootLayout({ children }) {
       <body>
         <Providers>
           <UploadNotification />
+
           <Suspense fallback={<FullPageLoader />}>
             {children}
           </Suspense>
