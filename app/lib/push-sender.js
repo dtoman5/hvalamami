@@ -1,4 +1,4 @@
-// @ts-nocheck
+// lib/push-sender.js
 
 import admin from 'firebase-admin'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
@@ -16,7 +16,7 @@ if (!admin.apps.length) {
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // Replace literal `\n` sequences with actual newlines
+      // Convert literal “\n” into real newlines
       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
     }),
   })
@@ -24,12 +24,12 @@ if (!admin.apps.length) {
 
 const fcm = admin.messaging()
 
-// 2) Create a Supabase “admin” client with your service-role key
+// 2) Create a Supabase “admin” client with your service‐role key
 if (
   !process.env.NEXT_PUBLIC_SUPABASE_URL ||
   !process.env.SUPABASE_SERVICE_ROLE_KEY
 ) {
-  throw new Error('Missing Supabase service role credentials')
+  throw new Error('Missing Supabase service-role credentials')
 }
 const supabaseAdmin = createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -59,7 +59,7 @@ export async function sendPush(notificationRow) {
     .map((r) => r.subscription)
     .filter((t) => typeof t === 'string' && t.length)
 
-  if (!tokens.length) {
+  if (tokens.length === 0) {
     // No devices to send to
     return
   }
