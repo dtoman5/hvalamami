@@ -11,6 +11,8 @@ import PostReview from '@/components/Overlays/PostReview';
 import FullPageLoader from '@/components/FullPageLoader';
 import React, { Suspense, useEffect } from 'react';
 
+import PushTester from '@/components/PushTester';
+
 export default function RootLayout({ children }) {
   const supabase = createClient();
   const { isOpen, editingPost, closeReview } = usePostReviewStore();
@@ -42,6 +44,9 @@ export default function RootLayout({ children }) {
       <body>
         <Providers>
           <UploadNotification />
+
+          {/* Vključi PushTester le v development okolju */}
+          {process.env.NODE_ENV === 'development' && <PushTester />}
 
           <Suspense fallback={<FullPageLoader />}>
             {children}
