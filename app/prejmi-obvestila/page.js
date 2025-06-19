@@ -1,14 +1,14 @@
-import dynamic from 'next/dynamic';
+// app/prejmi-obvestila/page.js
+import dynamic from 'next/dynamic'
 
-export const dynamic = 'force-dynamic'; // never prerender
-export const runtime = 'edge';          // or 'nodejs' if you prefer
+export const runtime = 'edge'  // ali 'nodejs', če ti bolj ustreza
 
-// load the client component only in the browser
+// komponenta, ki se naloži samo na klientu
 const PrejmiObvestilaClient = dynamic(
   () => import('@/app/components/PrejmiObvestilaClient'),
   { ssr: false }
-);
+)
 
 export default function PrejmiObvestilaPage() {
-  return <PrejmiObvestilaClient />;
+  return <PrejmiObvestilaClient />
 }
