@@ -1,6 +1,6 @@
 // app/api/broadcast/route.js
 import { NextResponse } from 'next/server'
-import { sendBroadcast } from '@/lib/push-sender'
+import { sendBroadcast } from '../../../lib/push-sender'
 
 export const runtime = 'edge'
 
