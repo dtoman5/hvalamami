@@ -8,7 +8,7 @@ import SearchOverlay from './Overlays/SearchOverlay';
 import ObvestilaOverlay from './Overlays/ObvestilaOverlay';
 import { createClient } from '../../lib/supabase/client';
 import { useRouter, usePathname } from 'next/navigation';
-import { useFeedStore } from '../../store/feedStore';
+import { useFeedStore } from '../store/feedStore';
 
 export default function Navbar() {
   const supabase = createClient();

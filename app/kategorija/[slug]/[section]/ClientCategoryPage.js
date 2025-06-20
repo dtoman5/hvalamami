@@ -4,15 +4,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Navbar from '@/components/Navbar';
-import Sidebar from '@/components/Sidebar';
-import NavTabs from '@/components/NavTabs';
-import ScrollManager from '@/components/Feed/ScrollManager';
-import InfiniteList from '@/components/Feed/InfiniteList';
-import Post from '@/components/Posts/Post';
-import CategoryFollowButton from '@/components/Categories/CategoryFollowButton';
+import Navbar from '../../../components/Navbar';
+import Sidebar from '../../../components/Sidebar';
+import NavTabs from '../../../components/NavTabs';
+import ScrollManager from '../../../components/Feed/ScrollManager';
+import InfiniteList from '../../../components/Feed/InfiniteList';
+import Post from '../../../components/Posts/Post';
+import CategoryFollowButton from '../../../components/Categories/CategoryFollowButton';
 import { createClient } from '../../../../lib/supabase/client';
-import { useFeedStore } from '@/store/feedStore';
+import { useFeedStore } from '../../../store/feedStore';
 
 const POSTS_KEY   = id => `category:${id}:posts`;
 const STORIES_KEY = id => `category:${id}:stories`;
