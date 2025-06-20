@@ -6,8 +6,8 @@ import TimeAgo from "./TimeAgo";
 import UserBadge from "../User/UserBadge";
 import LikeButton from "./LikeButtons";
 import { createClient } from '../../../lib/supabase/client';
-import { usePostReviewStore } from "@/store/postReviewStore";
-import MediaLazyLoader from "@/components/LazyLoading";
+import { usePostReviewStore } from "../../store/postReviewStore";
+import MediaLazyLoader from "../../components/LazyLoading";
 import Link from "next/link";
 import DeletePost from "./DeletePost";
 
