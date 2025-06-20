@@ -1,7 +1,12 @@
 // app/prejmi-obvestila/page.js
-'use client';
+export const runtime = 'edge';
 
-import PrejmiObvestilaClient from '../components/PrejmiObvestilaClient';
+import dynamic from 'next/dynamic';
+
+const PrejmiObvestilaClient = dynamic(
+  () => import('../components/PrejmiObvestilaClient'),
+  { ssr: false }
+);
 
 export default function PrejmiObvestilaPage() {
   return <PrejmiObvestilaClient />;
