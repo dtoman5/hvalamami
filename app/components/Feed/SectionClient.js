@@ -7,7 +7,7 @@ import { createClient } from '../../../lib/supabase/client';
 import InfiniteList from './InfiniteList';
 import Post from '../Posts/Post';
 import ScrollManager from './ScrollManager';
-import { useFeedStore } from '@/store/feedStore';
+import { useFeedStore } from '../../store/feedStore';
 
 const PAGE_SIZE = 10;
 

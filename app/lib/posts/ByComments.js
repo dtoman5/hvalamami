@@ -1,4 +1,4 @@
-import { getServerSupabase } from '@/lib/supabase';
+import { getServerSupabase } from '../../../lib/supabase/server';
 
 export async function fetchPostsByComments({ userId, page = 1, limit = 10 }) {
   const supabase = getServerSupabase();

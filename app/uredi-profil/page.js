@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
-import Navbar from '@/components/Navbar';
+import Navbar from '../components/Navbar';
 import Link from "next/link";
 
 // ——— constants ———

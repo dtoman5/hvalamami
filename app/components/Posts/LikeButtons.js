@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createClient } from '../../../lib/supabase/client';
-import { createNotification } from "@/lib/notifications";
+import { createNotification } from "../../lib/notifications";
 
 export default function LikeButton({ postId }) {
   const supabase = createClient();

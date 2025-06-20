@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFeedStore } from "@/store/feedStore";
+import { useFeedStore } from "../store/feedStore";
 
 export function useSectionScrollRestore(sectionKey) {
   const scrollPos = useFeedStore(s => s.sections[sectionKey]?.scrollPos || 0);

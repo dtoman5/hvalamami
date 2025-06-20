@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../lib/supabase/client';
 import { messaging } from '../../lib/firebase';    // <-- popravljena pot
 import { getToken, onMessage } from 'firebase/messaging';
 

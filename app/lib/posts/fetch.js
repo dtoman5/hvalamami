@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '../../../lib/supabase/server'
 
 export async function fetchFeed({ section, userId, page = 1, limit = 10 }) {
   const supabase = createClient();

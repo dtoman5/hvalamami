@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useCallback, useState, useRef } from 'react';
 import Spinner from '../Loader/Spinner';
-import { useFeedStore } from '@/store/feedStore';
+import { useFeedStore } from '../../store/feedStore';
 import { createClient } from '../../../lib/supabase/client';
 import { useDebouncedCallback } from 'use-debounce';
 

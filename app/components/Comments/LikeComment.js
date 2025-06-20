@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from '../../../lib/supabase/client';
 import { toast } from "react-toastify";
-import { createNotification } from "@/lib/notifications";
+import { createNotification } from "../../lib/notifications";
 
 export default function LikeComment({ commentId }) {
   const supabase = createClient();

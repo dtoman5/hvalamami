@@ -5,10 +5,10 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { createClient } from '../../../lib/supabase/client';
 import { toast } from 'react-toastify';
-import { useUploadStore } from '@/store/uploadStore';
-import { useFeedStore } from '@/store/feedStore';
-import { processUpload } from '@/lib/processUpload';
-import { compressImage } from '@/lib/compressImage';
+import { useUploadStore } from '../../store/uploadStore';
+import { useFeedStore } from '../../store/feedStore';
+import { processUpload } from '../../lib/processUpload';
+import { compressImage } from '../../lib/compressImage';
 
 const MAX_FILE_SIZE_MB = 50;
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];

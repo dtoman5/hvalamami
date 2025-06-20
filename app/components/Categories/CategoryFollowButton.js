@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '../../../lib/supabase/client';
-import { useFeedStore } from '@/store/feedStore';
-import Spinner from '@/components/Loader/Spinner';
+import { useFeedStore } from '../../store/feedStore';
+import Spinner from '../../components/Loader/Spinner';
 
 export default function CategoryFollowButton({
   categoryId,

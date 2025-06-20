@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import { redirect } from 'next/navigation';
 import { cookies, headers } from 'next/headers';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import SectionClient from '@/components/Feed/SectionClient';
+import SectionClient from '../../components/Feed/SectionClient';
 
 const PAGE_SIZE = 10;
 const VALID_SECTIONS = ['followers', 'stories', 'categories'];

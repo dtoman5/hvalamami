@@ -5,11 +5,11 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 import { createClient } from '../../lib/supabase/client';
-import Navbar from '@/components/Navbar';
-import Sidebar from '@/components/Sidebar';
-import KategorijeOverlay from '@/components/Overlays/KategorijeOverlay';
-import SugestedUsers from '@/components/User/SugestedUsers';
-import { usePostReviewStore } from '@/store/postReviewStore';
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
+import KategorijeOverlay from '../components/Overlays/KategorijeOverlay';
+import SugestedUsers from '../components/User/SugestedUsers';
+import { usePostReviewStore } from '../store/postReviewStore';
 import NavTabs from '../components/NavTabs';
 
 export default function ZidLayout({ children }) {

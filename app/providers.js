@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect } from 'react';
-import { useUploadStore } from '@/store/uploadStore';
+import { useUploadStore } from './store/uploadStore';
 import { createClient } from '../lib/supabase/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

@@ -5,7 +5,7 @@ import { createClient } from '../../../lib/supabase/client';
 import Link from 'next/link';
 import UserBadge from '../User/UserBadge';
 import FollowButton from '../User/FollowButton';
-import { useFeedStore } from '@/store/feedStore';
+import { useFeedStore } from '../../store/feedStore';
 
 const truncateUsername = (username, maxLength = 8) =>
   username.length > maxLength ? `${username.slice(0, maxLength)}...` : username;

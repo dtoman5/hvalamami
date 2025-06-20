@@ -5,15 +5,15 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '../../../lib/supabase/client';
-import Navbar from '@/components/Navbar';
-import Sidebar from '@/components/Sidebar';
-import UserBadge from '@/components/User/UserBadge';
-import FollowButton from '@/components/User/FollowButton';
-import Post from '@/components/Posts/Post';
-import InfiniteList from '@/components/Feed/InfiniteList';
-import ScrollManager from '@/components/Feed/ScrollManager';
+import Navbar from '../../components/Navbar';
+import Sidebar from '../../components/Sidebar';
+import UserBadge from '../../components/User/UserBadge';
+import FollowButton from '../../components/User/FollowButton';
+import Post from '../../components/Posts/Post';
+import InfiniteList from '../../components/Feed/InfiniteList';
+import ScrollManager from '../../components/Feed/ScrollManager';
 import { toast } from 'react-toastify';
-import { useFeedStore } from '@/store/feedStore';
+import { useFeedStore } from '../../store/feedStore';
 import NavTabs from '../../components/NavTabs';
 
 export default function ClientProfile({

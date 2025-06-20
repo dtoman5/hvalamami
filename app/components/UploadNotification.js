@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useUploadStore } from '@/store/uploadStore';
+import { useUploadStore } from '../store/uploadStore';
 
 export default function UploadNotification() {
   const { uploadInProgress, uploadMessage, setUploadMessage } = useUploadStore();

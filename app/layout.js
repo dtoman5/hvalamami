@@ -4,14 +4,14 @@ import './globals.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createClient } from '../lib/supabase/client';
-import { Providers } from '@/providers';
-import UploadNotification from '@/components/UploadNotification';
-import { usePostReviewStore } from '@/store/postReviewStore';
-import PostReview from '@/components/Overlays/PostReview';
-import FullPageLoader from '@/components/FullPageLoader';
+import { Providers } from './providers';
+import UploadNotification from './components/UploadNotification';
+import { usePostReviewStore } from './store/postReviewStore';
+import PostReview from './components/Overlays/PostReview';
+import FullPageLoader from './components/FullPageLoader';
 import React, { Suspense, useEffect } from 'react';
 
-import PushTester from '@/components/PushTester';
+import PushTester from './components/PushTester';
 
 export default function RootLayout({ children }) {
   const supabase = createClient();
