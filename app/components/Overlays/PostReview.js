@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../../lib/supabase/client';
 import { toast } from 'react-toastify';
 import { useUploadStore } from '@/store/uploadStore';
 import { useFeedStore } from '@/store/feedStore';

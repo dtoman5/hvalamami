@@ -3,7 +3,7 @@
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../lib/supabase/client';
 import { Providers } from '@/providers';
 import UploadNotification from '@/components/UploadNotification';
 import { usePostReviewStore } from '@/store/postReviewStore';

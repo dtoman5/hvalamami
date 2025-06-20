@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useFeedStore } from '@/store/feedStore';
 import { useDebouncedCallback } from 'use-debounce';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../../lib/supabase/client';
 
 /**
  * ScrollManager – ohranja scroll pozicijo glede na sectionKey.

@@ -4,7 +4,7 @@ import { Suspense, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../../lib/supabase/client';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import PasswordStrengthIndicator from './PasswordStrengthIndicator';

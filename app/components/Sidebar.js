@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../lib/supabase/client';
 import Link from 'next/link';
 import UserBadge from './User/UserBadge';
 import FollowButton from './User/FollowButton';

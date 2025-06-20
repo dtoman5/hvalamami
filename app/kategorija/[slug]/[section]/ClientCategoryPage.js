@@ -11,7 +11,7 @@ import ScrollManager from '@/components/Feed/ScrollManager';
 import InfiniteList from '@/components/Feed/InfiniteList';
 import Post from '@/components/Posts/Post';
 import CategoryFollowButton from '@/components/Categories/CategoryFollowButton';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../../../lib/supabase/client';
 import { useFeedStore } from '@/store/feedStore';
 
 const POSTS_KEY   = id => `category:${id}:posts`;

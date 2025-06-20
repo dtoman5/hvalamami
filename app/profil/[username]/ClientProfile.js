@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../../lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import UserBadge from '@/components/User/UserBadge';

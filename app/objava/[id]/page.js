@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '../../../lib/supabase/client';
 import Link from 'next/link';
 import TimeAgo from '@/components/Posts/TimeAgo';
 import UserBadge from '@/components/User/UserBadge';

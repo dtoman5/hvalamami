@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { createAdminClient } from '../../../lib/supabase/admin'
 
 export const runtime = 'nodejs'
 

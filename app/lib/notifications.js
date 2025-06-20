@@ -1,5 +1,5 @@
 // lib/notifications.js
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '../../lib/supabase/client'
 
 export async function createNotification({ type, user_id, source_user_id, post_id = null, comment_id = null, comment_like_id = null }) {
   const supabase = createClient();
