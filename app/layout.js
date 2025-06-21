@@ -4,8 +4,9 @@ import './globals.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
-import { SupabaseProvider } from '@supabase/auth-helpers-react';
-import { Suspense, useState, useEffect } from 'react';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { useState, useEffect, Suspense } from 'react';
+
 import UploadNotification from './components/UploadNotification';
 import { usePostReviewStore } from './store/postReviewStore';
 import PostReview from './components/Overlays/PostReview';
@@ -40,10 +41,9 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <SupabaseProvider supabaseClient={supabaseClient}>
+        <SessionContextProvider supabaseClient={supabaseClient}>
           <UploadNotification />
 
-          {/* Vključi PushTester le v development okolju */}
           {process.env.NODE_ENV === 'development' && <PushTester />}
 
           <Suspense fallback={<FullPageLoader />}>
@@ -71,7 +71,7 @@ export default function RootLayout({ children }) {
             pauseOnHover
             theme="light"
           />
-        </SupabaseProvider>
+        </SessionContextProvider>
       </body>
     </html>
   );
