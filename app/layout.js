@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { SupabaseProvider } from '@supabase/auth-helpers-react';
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import UploadNotification from './components/UploadNotification';
 import { usePostReviewStore } from './store/postReviewStore';
 import PostReview from './components/Overlays/PostReview';
