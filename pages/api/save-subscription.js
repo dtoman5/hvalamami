@@ -1,4 +1,3 @@
-// pages/api/save-subscription.js
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -13,8 +12,8 @@ export default async function handler(req, res) {
 
   const { token, user_id } = req.body;
 
-  if (!token || !user_id) {
-    return res.status(400).json({ error: 'Missing token or user_id' });
+  if (!token || !user_id || typeof token !== 'string' || token.length < 10) {
+    return res.status(400).json({ error: 'Missing or invalid token/user_id' });
   }
 
   const subscriptionObject = {
@@ -24,10 +23,12 @@ export default async function handler(req, res) {
 
   const { data, error } = await supabase
     .from('push_subscriptions')
-    .insert({ user_id, subscription: subscriptionObject });
+    .upsert({ user_id, subscription: subscriptionObject }, { onConflict: ['user_id', 'subscription'] });
 
   if (error) {
-    console.error('Error saving token to Supabase:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error saving token to Supabase:', error);
+    }
     return res.status(500).json({ error: 'Failed to save token' });
   }
 
