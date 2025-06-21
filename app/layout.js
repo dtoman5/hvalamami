@@ -3,21 +3,19 @@
 import './globals.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { createClient } from '../lib/supabase/client';
-import { Providers } from './providers';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SupabaseProvider } from '@supabase/auth-helpers-react';
+import { useState, useEffect } from 'react';
 import UploadNotification from './components/UploadNotification';
 import { usePostReviewStore } from './store/postReviewStore';
 import PostReview from './components/Overlays/PostReview';
 import FullPageLoader from './components/FullPageLoader';
-import React, { Suspense, useEffect } from 'react';
-
 import PushTester from './components/PushTester';
 
 export default function RootLayout({ children }) {
-  const supabase = createClient();
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
   const { isOpen, editingPost, closeReview } = usePostReviewStore();
 
-  // Register the service worker for Firebase Messaging
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
@@ -42,7 +40,7 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <Providers>
+        <SupabaseProvider supabaseClient={supabaseClient}>
           <UploadNotification />
 
           {/* Vključi PushTester le v development okolju */}
@@ -73,7 +71,7 @@ export default function RootLayout({ children }) {
             pauseOnHover
             theme="light"
           />
-        </Providers>
+        </SupabaseProvider>
       </body>
     </html>
   );

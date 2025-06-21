@@ -1,77 +1,42 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken } from 'firebase/messaging';
-
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
-const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
 
 export default function PrejmiObvestilaClient() {
+  const supabase = useSupabaseClient(); // koristi Provider
+  const user = useUser();               // pridobi user iz konteksta
   const [permission, setPermission] = useState('default');
   const [token, setToken] = useState(null);
   const [status, setStatus] = useState('');
 
-  useEffect(() => {
-    initializeApp(firebaseConfig);
-  }, []);
-
   const requestPermissionAndRegister = async () => {
-    try {
-      const result = await Notification.requestPermission();
-      setPermission(result);
+    if (!user) {
+      setStatus('Ni prijavljenega uporabnika');
+      return;
+    }
 
-      if (result !== 'granted') {
-        setStatus('Dovoljenje zavrnjeno');
-        return;
-      }
+    const result = await Notification.requestPermission();
+    setPermission(result);
 
-      const messaging = getMessaging();
-      const currentToken = await getToken(messaging, { vapidKey });
-      setToken(currentToken);
-      console.log('Token naprave:', currentToken);
+    if (result !== 'granted') {
+      setStatus('Dovoljenje zavrnjeno');
+      return;
+    }
 
-      const {
-        data: { session },
-        error
-      } = await supabase.auth.getSession();
+    const messaging = getMessaging();
+    const currentToken = await getToken(messaging, { vapidKey });
+    setToken(currentToken);
 
-      if (error || !session?.user) {
-        console.error('Ni prijavljenega uporabnika:', error);
-        setStatus('Ni prijavljenega uporabnika');
-        return;
-      }
+    const res = await fetch('/api/save-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: currentToken, user_id: user.id })
+    });
 
-      const res = await fetch('/api/save-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: currentToken, user_id: session.user.id })
-      });
-
-      const json = await res.json();
-      if (!res.ok) {
-        console.error('Shranjevanje neuspešno:', json);
-        setStatus('Napaka pri shranjevanju');
-      } else {
-        console.log('Uspešno shranjeno');
-        setStatus('Uspešno shranjeno');
-      }
-    } catch (err) {
-      console.error('Napaka:', err);
-      setStatus('Napaka pri pridobivanju obvestil');
+    const json = await res.json();
+    if (!res.ok) {
+      console.error('Shranjevanje neuspešno:', json);
+      setStatus('Napaka pri shranjevanju');
+    } else {
+      setStatus('Uspešno shranjeno');
     }
   };
 
