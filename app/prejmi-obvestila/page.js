@@ -1,7 +1,7 @@
 // app/prejmi-obvestila/page.js
-'use client';
+export const runtime = 'edge'; // ali 'nodejs', če želiš
 
-import PrejmiObvestilaClient from '@/app/components/PrejmiObvestilaClient';
+import PrejmiObvestilaClient from '@/components/PrejmiObvestilaClient';
 
 export default function PrejmiObvestilaPage() {
   return <PrejmiObvestilaClient />;
