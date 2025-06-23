@@ -11,7 +11,6 @@ import UploadNotification from './components/UploadNotification';
 import { usePostReviewStore } from './store/postReviewStore';
 import PostReview from './components/Overlays/PostReview';
 import FullPageLoader from './components/FullPageLoader';
-import PushTester from './components/PushTester';
 
 export default function RootLayout({ children }) {
   const [supabaseClient] = useState(() => createBrowserSupabaseClient());
@@ -43,8 +42,6 @@ export default function RootLayout({ children }) {
       <body>
         <SessionContextProvider supabaseClient={supabaseClient}>
           <UploadNotification />
-
-          {process.env.NODE_ENV === 'development' && <PushTester />}
 
           <Suspense fallback={<FullPageLoader />}>
             {children}
