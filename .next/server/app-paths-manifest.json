@@ -1,1 +1,7 @@
-{}
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/prejmi-obvestila/page": "app/prejmi-obvestila/page.js",
+  "/prijava/page": "app/prijava/page.js",
+  "/zid/page": "app/zid/page.js"
+}

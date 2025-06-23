@@ -20,54 +20,90 @@ const app = initializeApp(firebaseConfig);
 export default function PrejmiObvestilaClient() {
   const user = useUser();
   const [status, setStatus] = useState('');
-  const [token, setToken] = useState(null);
+  const [tokenData, setTokenData] = useState(null);
 
   const handleRegister = async () => {
-    if (!user) return setStatus('Ni uporabnika');
+    setStatus('⏳ Pridobivanje žetona...');
+    if (!user) return setStatus('⚠️ Ni uporabnika');
 
     const supported = await isSupported();
-    if (!supported) return setStatus('Brskalnik ne podpira obvestil');
+    if (!supported) return setStatus('⚠️ Brskalnik ne podpira obvestil');
 
-    const messaging = getMessaging(app);
-    const currentToken = await getToken(messaging, {
-      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-    });
+    try {
+      const messaging = getMessaging(app);
+      const currentToken = await getToken(messaging, {
+        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      });
 
-    if (!currentToken) return setStatus('Ni žetona');
+      if (!currentToken) return setStatus('❌ Ni bilo mogoče pridobiti žetona');
 
-    // 🔥 Ustvarimo WebPush JSON objekt za shranjevanje (samo endpoint za zdaj)
-    const tokenObj = {
-      endpoint: currentToken,
-      timestamp: new Date().toISOString(),
-    };
+      const fullToken = {
+        endpoint: currentToken,
+        timestamp: new Date().toISOString(),
+      };
 
-    setToken(tokenObj);
+      setTokenData(fullToken);
 
-    const res = await fetch('/api/notifications/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: tokenObj, user_id: user.id }),
-    });
+      const res = await fetch('/api/notifications/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: fullToken, user_id: user.id }),
+      });
 
-    setStatus(res.ok ? 'Registrirano ✅' : 'Napaka pri registraciji');
+      const json = await res.json();
+
+      if (res.ok) {
+        console.log('✅ Registracija uspešna', json);
+        setStatus('✅ Registracija uspešna');
+      } else {
+        console.error('❌ Napaka pri registraciji:', json);
+        setStatus('❌ Napaka pri registraciji');
+      }
+    } catch (err) {
+      console.error('❌ Napaka pri registraciji:', err.message);
+      setStatus('❌ Napaka pri registraciji');
+    }
   };
 
   const sendTestNotification = async () => {
-    if (!token?.endpoint) return setStatus('Žeton ni na voljo');
-    const res = await fetch('/api/notifications/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: token.endpoint }),
-    });
-    setStatus(res.ok ? 'Testno poslano ✅' : 'Napaka pri pošiljanju');
+    console.log('📤 Klik: pošiljam testno obvestilo...');
+
+    if (!tokenData?.endpoint) {
+      setStatus('⚠️ Ni veljavnega žetona');
+      console.warn('⚠️ Ni žetona – ne morem poslati');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/notifications/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: tokenData.endpoint }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        console.error('❌ Napaka pri pošiljanju:', json);
+        setStatus('❌ Napaka pri pošiljanju');
+      } else {
+        console.log('✅ Obvestilo poslano:', json);
+        setStatus('✅ Obvestilo poslano');
+      }
+    } catch (err) {
+      console.error('❌ Napaka pri fetch:', err);
+      setStatus('❌ Napaka pri fetch');
+    }
   };
 
   return (
-    <div>
-      <h2>Push obvestila</h2>
-      <button onClick={handleRegister}>Dovoli obvestila</button>
-      <button onClick={sendTestNotification}>Pošlji testno obvestilo</button>
-      <p>Status: {status}</p>
+    <div style={{ padding: '1rem', maxWidth: '500px' }}>
+      <h2>📬 Push obvestila</h2>
+      <button onClick={handleRegister} style={{ marginRight: '1rem' }}>
+        ✅ Dovoli obvestila
+      </button>
+      <button onClick={sendTestNotification}>🚀 Pošlji testno obvestilo</button>
+      <p style={{ marginTop: '1rem' }}>Status: <strong>{status}</strong></p>
     </div>
   );
 }
