@@ -1,88 +1,64 @@
 'use client';
+import { useUser } from '@supabase/auth-helpers-react';
+import { useState } from 'react';
+import { getMessaging, getToken, isSupported } from 'firebase/messaging';
+import { initializeApp } from 'firebase/app';
 
-import { useEffect, useState } from 'react';
-import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
-import { getToken } from 'firebase/messaging';
-import { getFirebaseMessaging } from '../lib/client/firebase';
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+};
 
-const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+const app = initializeApp(firebaseConfig);
 
 export default function PrejmiObvestilaClient() {
-  const [permission, setPermission] = useState('default');
-  const [token, setToken] = useState(null);
-  const [status, setStatus] = useState('');
-
-  const supabase = useSupabaseClient();
   const user = useUser();
+  const [status, setStatus] = useState('');
+  const [token, setToken] = useState(null);
 
-  const requestPermissionAndRegister = async () => {
-    if (!user) {
-      setStatus('Ni prijavljenega uporabnika');
-      return;
-    }
+  const handleRegister = async () => {
+    if (!user) return setStatus('Ni uporabnika');
+    const supported = await isSupported();
+    if (!supported) return setStatus('Ni podpore za obvestila');
 
-    try {
-      const result = await Notification.requestPermission();
-      setPermission(result);
+    const messaging = getMessaging(app);
+    const currentToken = await getToken(messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+    });
 
-      if (result !== 'granted') {
-        setStatus('Dovoljenje zavrnjeno');
-        return;
-      }
+    if (!currentToken) return setStatus('Ni žetona');
 
-      const messaging = await getFirebaseMessaging();
+    setToken(currentToken);
+    const res = await fetch('/api/notifications/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: currentToken, user_id: user.id }),
+    });
 
-      if (!messaging) {
-        console.error('Firebase messaging ni podprt');
-        setStatus('Brskalnik ne podpira obvestil');
-        return;
-      }
+    setStatus(res.ok ? 'Registrirano ✅' : 'Napaka pri registraciji');
+  };
 
-      const currentToken = await getToken(messaging, { vapidKey });
-
-      if (!currentToken) {
-        console.warn('Ni bilo mogoče pridobiti žetona');
-        setStatus('Žeton ni na voljo');
-        return;
-      }
-
-      setToken(currentToken);
-
-      const res = await fetch('/api/save-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: currentToken, user_id: user.id }),
-      });
-
-      const json = await res.json();
-
-      if (!res.ok) {
-        console.error('Shranjevanje neuspešno:', json);
-        setStatus('Napaka pri shranjevanju');
-      } else {
-        setStatus('Uspešno shranjeno');
-      }
-    } catch (err) {
-      console.error('Napaka med registracijo:', err);
-      setStatus('Napaka pri obdelavi');
-    }
+  const sendTestNotification = async () => {
+    if (!token) return setStatus('Ni shranjenega žetona');
+    const res = await fetch('/api/notifications/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    setStatus(res.ok ? 'Poslano ✅' : 'Napaka pri pošiljanju');
   };
 
   return (
     <div>
-      <h2>Obvestila</h2>
-      <p>Dovoljenje: {permission}</p>
-      <button onClick={requestPermissionAndRegister}>
-        Dovoli obvestila
-      </button>
-
-      {token && (
-        <p><strong>Token naprave:</strong><br />{token}</p>
-      )}
-
-      {status && (
-        <p>Status: {status}</p>
-      )}
+      <h2>Push obvestila</h2>
+      <button onClick={handleRegister}>Dovoli obvestila</button>
+      <button onClick={sendTestNotification}>Pošlji testno obvestilo</button>
+      <p>Status: {status}</p>
     </div>
   );
 }
