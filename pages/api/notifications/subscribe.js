@@ -12,8 +12,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Manjka token ali user_id' });
   }
 
-  // Če pride token kot objekt, vzemi samo endpoint
-  const finalToken = typeof token === 'object' && token.endpoint ? token.endpoint : token;
+  // Samo plain token string (če je bil prej objekt)
+  const finalToken =
+    typeof token === 'object' && token.endpoint ? token.endpoint : token;
 
   try {
     const { data, error } = await supabase
@@ -22,20 +23,22 @@ export default async function handler(req, res) {
         {
           user_id,
           token: finalToken,
-          // 🛑 Odstranimo 'timestamp'
         },
-        { onConflict: ['user_id'], ignoreDuplicates: false }
+        {
+          onConflict: ['user_id'], // ali dodaš še 'token' če naj bo unikatno
+          ignoreDuplicates: false,
+        }
       );
 
     if (error) {
-      console.error('❌ Napaka pri vstavljanju:', error);
+      console.error('❌ Napaka pri upsert:', error);
       return res.status(500).json({ error: error.message });
     }
 
     console.log('✅ Naprava shranjena:', data);
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error('❌ Napaka pri handlerju:', err);
+    console.error('❌ Napaka handler:', err);
     return res.status(500).json({ error: err.message });
   }
 }
