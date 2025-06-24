@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         {
           user_id,
           token: finalToken,
-          timestamp: new Date().toISOString(),
+          // 🛑 Odstranimo 'timestamp'
         },
         { onConflict: ['user_id'], ignoreDuplicates: false }
       );
