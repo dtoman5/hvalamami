@@ -20,11 +20,11 @@ const app = initializeApp(firebaseConfig);
 export default function PrejmiObvestilaClient() {
   const user = useUser();
   const [status, setStatus] = useState('');
-  const [tokenData, setTokenData] = useState(null);
+  const [token, setToken] = useState('');
 
   const handleRegister = async () => {
     setStatus('⏳ Pridobivanje žetona...');
-    if (!user) return setStatus('⚠️ Ni uporabnika');
+    if (!user) return setStatus('⚠️ Uporabnik ni prijavljen');
 
     const supported = await isSupported();
     if (!supported) return setStatus('⚠️ Brskalnik ne podpira obvestil');
@@ -37,40 +37,33 @@ export default function PrejmiObvestilaClient() {
 
       if (!currentToken) return setStatus('❌ Ni bilo mogoče pridobiti žetona');
 
-      const fullToken = {
-        endpoint: currentToken,
-        timestamp: new Date().toISOString(),
-      };
-
-      setTokenData(fullToken);
+      setToken(currentToken);
 
       const res = await fetch('/api/notifications/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: fullToken, user_id: user.id }),
+        body: JSON.stringify({ token: currentToken, user_id: user.id }),
       });
 
       const json = await res.json();
 
       if (res.ok) {
-        console.log('✅ Registracija uspešna', json);
+        console.log('✅ Registracija uspešna:', json);
         setStatus('✅ Registracija uspešna');
       } else {
         console.error('❌ Napaka pri registraciji:', json);
         setStatus('❌ Napaka pri registraciji');
       }
     } catch (err) {
-      console.error('❌ Napaka pri registraciji:', err.message);
+      console.error('❌ Napaka pri registraciji:', err);
       setStatus('❌ Napaka pri registraciji');
     }
   };
 
   const sendTestNotification = async () => {
-    console.log('📤 Klik: pošiljam testno obvestilo...');
-
-    if (!tokenData?.endpoint) {
-      setStatus('⚠️ Ni veljavnega žetona');
+    if (!token) {
       console.warn('⚠️ Ni žetona – ne morem poslati');
+      setStatus('⚠️ Ni žetona');
       return;
     }
 
@@ -78,17 +71,17 @@ export default function PrejmiObvestilaClient() {
       const res = await fetch('/api/notifications/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: tokenData.endpoint }),
+        body: JSON.stringify({ token }),
       });
 
       const json = await res.json();
 
-      if (!res.ok) {
-        console.error('❌ Napaka pri pošiljanju:', json);
-        setStatus('❌ Napaka pri pošiljanju');
-      } else {
+      if (res.ok) {
         console.log('✅ Obvestilo poslano:', json);
         setStatus('✅ Obvestilo poslano');
+      } else {
+        console.error('❌ Napaka pri pošiljanju:', json);
+        setStatus('❌ Napaka pri pošiljanju');
       }
     } catch (err) {
       console.error('❌ Napaka pri fetch:', err);
