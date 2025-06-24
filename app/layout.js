@@ -20,12 +20,8 @@ export default function RootLayout({ children }) {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/firebase-messaging-sw.js')
-        .then((reg) => {
-          console.log('Service worker registered with scope:', reg.scope);
-        })
-        .catch((err) => {
-          console.error('Service worker registration failed:', err);
-        });
+        .then((reg) => console.log('✅ Service worker registered:', reg.scope))
+        .catch((err) => console.error('❌ SW napaka:', err));
     }
   }, []);
 
