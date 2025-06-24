@@ -12,20 +12,30 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Manjka token ali user_id' });
   }
 
+  // Če pride token kot objekt, vzemi samo endpoint
+  const finalToken = typeof token === 'object' && token.endpoint ? token.endpoint : token;
+
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('push_subscriptions')
-      .insert([{ token, user_id }]);
+      .upsert(
+        {
+          user_id,
+          token: finalToken,
+          timestamp: new Date().toISOString(),
+        },
+        { onConflict: ['user_id'], ignoreDuplicates: false }
+      );
 
     if (error) {
       console.error('❌ Napaka pri vstavljanju:', error);
       return res.status(500).json({ error: error.message });
     }
 
-    console.log('✅ Naprava shranjena za user:', user_id);
-    res.status(200).json({ success: true });
+    console.log('✅ Naprava shranjena:', data);
+    return res.status(200).json({ success: true });
   } catch (err) {
-    console.error('❌ Server napaka:', err);
-    res.status(500).json({ error: err.message });
+    console.error('❌ Napaka pri handlerju:', err);
+    return res.status(500).json({ error: err.message });
   }
 }
