@@ -89,9 +89,9 @@ export default function LikeButton({ postId }) {
             body: JSON.stringify({
               user_id: postOwnerId,
               source_user_id: userId,
-              post_id: postId,
+              post_id: postId
             }),
-          });          
+          });               
         }
       }
     } catch (error) {
