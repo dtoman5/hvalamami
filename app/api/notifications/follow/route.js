@@ -1,6 +1,6 @@
 // app/api/notifications/follow/route.js
 import { NextResponse } from 'next/server';
-import { createNotificationWithPush } from '../../../../lib/supabase/server';
+import { createNotificationWithPush } from '../../../../lib/notifications/server';
 
 export async function POST(req) {
   const body = await req.json();
