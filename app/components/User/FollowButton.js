@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '../../../lib/supabase/client';
-import { createNotificationWithPush } from '../../../lib/createNotificationWithPush';
 import { useFeedStore } from '../../store/feedStore';
 import Spinner from '../../components/Loader/Spinner';
 
@@ -68,10 +67,13 @@ export default function FollowButton({
           });
         if (error) throw error;
 
-        await createNotificationWithPush({
-          type: 'follow',
-          user_id: followingId,
-          source_user_id: followerId,
+        await fetch('/api/notifications/follow', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: followingId,
+            source_user_id: followerId,
+          }),
         });
       }
 

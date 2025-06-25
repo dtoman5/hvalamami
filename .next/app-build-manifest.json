@@ -11,6 +11,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/loading.js"
     ],
+    "/prejmi-obvestila/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/prejmi-obvestila/page.js"
+    ],
     "/zid/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -21,25 +26,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/zid/page.js"
     ],
-    "/prijava/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/prijava/page.js"
-    ],
     "/zid/[section]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/zid/[section]/page.js"
     ],
-    "/prejmi-obvestila/page": [
+    "/prijava/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/prejmi-obvestila/page.js"
-    ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/prijava/page.js"
     ]
   }
 }
