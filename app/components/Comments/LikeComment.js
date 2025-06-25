@@ -4,7 +4,6 @@
 import { useState, useEffect } from "react";
 import { createClient } from '../../../lib/supabase/client';
 import { toast } from "react-toastify";
-import { createNotification } from "../../lib/notifications";
 
 export default function LikeComment({ commentId }) {
   const supabase = createClient();
@@ -85,14 +84,17 @@ export default function LikeComment({ commentId }) {
 
         const commentInfo = await getCommentInfo();
         if (commentInfo?.user_id !== userId && inserted?.id) {
-          await createNotification({
-            type: "comment_like",
-            user_id: commentInfo.user_id,
-            source_user_id: userId,
-            post_id: commentInfo.post_id,
-            comment_id: commentId,
-            comment_like_id: inserted.id
-          });
+          await fetch('/api/notifications/comment-like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: commentInfo.user_id,
+              source_user_id: userId,
+              post_id: commentInfo.post_id,
+              comment_id: commentId,
+              comment_like_id: inserted.id
+            }),
+          });          
         }
       }
     } catch (err) {

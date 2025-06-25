@@ -1,4 +1,3 @@
-// app/components/Overlays/ObvestilaOverlay.js
 'use client';
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
@@ -27,7 +26,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
 
   // 2) de-dupe & collapse, and filter out notifications from deleted users
   const collapseNotifications = (items) => {
-    // drop any notifications where source_profile no longer exists
     const valid = items.filter(n => n.source_profile && n.source_profile.id);
     const seen = new Set();
     return valid.filter((n) => {
@@ -55,7 +53,7 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
     });
   };
 
-  // 3) fetch page (keyset pagination)
+  // 3) fetch page
   const fetchNotifications = useCallback(
     async (cursor) => {
       if (!user) return { items: [], nextCursor: null };
@@ -79,9 +77,7 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
       if (cursor) {
         query = query
           .lt('created_at', cursor.created_at)
-          .or(
-            `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`
-          );
+          .or(`created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`);
       }
 
       const { data, error } = await query;
@@ -90,7 +86,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
         return { items: [], nextCursor: null };
       }
 
-      // remove duplicate IDs
       const uniq = [];
       const seenIds = new Set();
       for (const n of data) {
@@ -142,7 +137,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
     setLoading(false);
   };
 
-  // 6) close & mark read
   const handleClose = async () => {
     if (user) {
       await supabase
@@ -157,7 +151,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
     onClose();
   };
 
-  // 7) clear all
   const handleClearAll = async () => {
     if (!user) return;
     await supabase.from('notifications').delete().eq('user_id', user.id);
@@ -165,7 +158,6 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
     setNextCursor(null);
   };
 
-  // helper for media thumbnail
   const getMedia = (n) =>
     n.post?.images?.[0]?.file_url || n.post?.videos?.[0]?.thumbnail_url;
 
@@ -192,29 +184,32 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
           </div>
           <div className="left-nofity-info">
             <div className="username">
-              {shortenUsername(n.source_profile.username)} <UserBadge userType={n.source_profile.user_type}/>
-              <div className="time"><TimeAgo timestamp={n.created_at}/></div>
+              {shortenUsername(n.source_profile.username)} <UserBadge userType={n.source_profile.user_type} />
+              <div className="time"><TimeAgo timestamp={n.created_at} /></div>
             </div>
             <div className="p-t-1">
               {{
                 follow: 'Mamica vam je pričela slediti',
                 post: 'Objava je uspešno ustvarjena',
                 story: 'Zgodba je uspešno ustvarjena',
-                like: 'Mamica je všeč tvoja objava',
+                like: 'Mamici je všeč tvoja objava',
                 comment: 'Mamica je komentirala tvojo objavo',
+                comment_reply: 'Mamica je komentirala isto objavo kot vi',
                 comment_like: 'Mamici je všeč tvoj komentar',
                 'post-update': 'Objava uspešno urejena',
                 'story-update': 'Zgodba uspešno urejena'
-              }[n.type]}
+              }[n.type] || 'Novo obvestilo'}
             </div>
           </div>
         </div>
         {isFollow ? (
-          <FollowButton followingId={n.source_profile.id}/>
+          <FollowButton followingId={n.source_profile.id} />
         ) : (
-          getMedia(n) && <div className="notify-massage-post">
-            <img src={getMedia(n)} alt="" />
-          </div>
+          getMedia(n) && (
+            <div className="notify-massage-post">
+              <img src={getMedia(n)} alt="" />
+            </div>
+          )
         )}
       </Link>
     );
@@ -224,7 +219,7 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
 
   return (
     <div id="notificationsOverlay" className="overlay active">
-      <button className="close-btn" onClick={handleClose}><i className="bi bi-x-lg"/></button>
+      <button className="close-btn" onClick={handleClose}><i className="bi bi-x-lg" /></button>
       <div className="overlay-content">
         <div className="overlay-content-notify">
           <div className="menu-title m-b-2">
@@ -240,10 +235,10 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
             {notifications.map(renderNotification)}
             {loading && (
               <div className="text-center p-4">
-                <div className="spinner" style={{ width: 24, height: 24 }}/>
+                <div className="spinner" style={{ width: 24, height: 24 }} />
               </div>
             )}
-            <div ref={sentinelRef} style={{ height: 1 }}/>
+            <div ref={sentinelRef} style={{ height: 1 }} />
             {!nextCursor && notifications.length > 0 && !loading && (
               <p className="text-center p-t-2 p-b-2">
                 Ni več obvestil za prikaz.

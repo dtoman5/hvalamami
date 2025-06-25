@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createClient } from '../../../lib/supabase/client';
-import { createNotification } from "../../lib/notifications";
 
 export default function LikeButton({ postId }) {
   const supabase = createClient();
@@ -84,12 +83,15 @@ export default function LikeButton({ postId }) {
 
         const postOwnerId = await getPostOwner();
         if (postOwnerId && postOwnerId !== userId) {
-          await createNotification({
-            type: "like",
-            user_id: postOwnerId,
-            source_user_id: userId,
-            post_id: postId
-          });
+          await fetch('/api/notifications/like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: postOwnerId,
+              source_user_id: userId,
+              post_id: postId,
+            }),
+          });          
         }
       }
     } catch (error) {

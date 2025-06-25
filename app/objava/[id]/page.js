@@ -10,7 +10,6 @@ import LikeButton from '../../components/Posts/LikeButtons';
 import LikeComment from '../../components/Comments/LikeComment';
 import Navbar from '../../components/Navbar';
 import { usePostReviewStore } from '../../store/postReviewStore';
-import { createNotification } from '../../lib/notifications';
 import InfiniteList from '../../components/Feed/InfiniteList';
 import MediaLazyLoader from '../../components/LazyLoading';
 import Spinner from '../../components/Loader/Spinner';
@@ -318,13 +317,16 @@ export default function PostPage() {
 
         // Pošiljanje notifikacije, če ni avtor
         if (post.user_id !== user.id && newC) {
-          await createNotification({
-            user_id: post.user_id,
-            source_user_id: user.id,
-            type: 'comment',
-            post_id: post.id,
-            comment_id: newC.id,
-          });
+          await fetch('/api/notifications/comment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: post.user_id,
+              source_user_id: user.id,
+              post_id: post.id,
+              comment_id: newC.id
+            }),
+          });          
         }
       }
     }
