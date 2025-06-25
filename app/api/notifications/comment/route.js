@@ -1,12 +1,13 @@
-import { createNotificationWithPush } from '@/lib/createNotificationWithPush';
-import { supabase } from '@/lib/supabase/server-direct';
+import { NextResponse } from 'next/server';
+import { createNotificationWithPush } from '../../../../lib/notifications/server';
+import { supabase } from '../../../../lib/supabase/server-direct';
 
 export async function POST(req) {
   try {
     const body = await req.json();
     const { post_id, comment_id, source_user_id } = body;
 
-    // 1) Obvesti avtorja objave (type: comment)
+    // 1) Obvesti avtorja objave
     const { data: postData, error: postErr } = await supabase
       .from('posts')
       .select('user_id')
@@ -15,7 +16,6 @@ export async function POST(req) {
 
     if (postErr) throw postErr;
 
-    // Pošlji obvestilo avtorju objave (če ni isti kot komentator)
     if (postData.user_id !== source_user_id) {
       await createNotificationWithPush({
         ...body,
@@ -24,7 +24,7 @@ export async function POST(req) {
       });
     }
 
-    // 2) Obvesti druge komentatorje (type: comment_reply)
+    // 2) Obvesti druge komentatorje (brez duplikatov)
     const { data: commenters, error: commentersErr } = await supabase
       .from('comments')
       .select('user_id')
@@ -36,8 +36,8 @@ export async function POST(req) {
     for (const c of commenters) {
       const uid = c.user_id;
       if (
-        uid !== source_user_id && // ne obvestimo sebe
-        uid !== postData.user_id && // ne še enkrat avtorja
+        uid !== source_user_id &&
+        uid !== postData.user_id &&
         !notifiedUserIds.has(uid)
       ) {
         notifiedUserIds.add(uid);
@@ -49,9 +49,9 @@ export async function POST(req) {
       }
     }
 
-    return new Response(JSON.stringify({ success: true }));
+    return NextResponse.json({ success: true });
   } catch (err) {
     console.error('❌ Napaka pri comment obvestilu:', err.message);
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
