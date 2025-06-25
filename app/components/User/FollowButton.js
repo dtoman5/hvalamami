@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '../../../lib/supabase/client';
-import { createNotification } from '../../lib/notifications';
+import { createNotificationWithPush } from '../../../lib/createNotificationWithPush';
 import { useFeedStore } from '../../store/feedStore';
 import Spinner from '../../components/Loader/Spinner';
 
@@ -68,7 +68,7 @@ export default function FollowButton({
           });
         if (error) throw error;
 
-        await createNotification({
+        await createNotificationWithPush({
           type: 'follow',
           user_id: followingId,
           source_user_id: followerId,
