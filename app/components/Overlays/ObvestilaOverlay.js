@@ -162,7 +162,7 @@ export default function ObvestilaOverlay({ isOpen, onClose }) {
     n.post?.images?.[0]?.file_url || n.post?.videos?.[0]?.thumbnail_url;
 
   const shortenUsername = (u) =>
-    u && u.length > 8 ? u.slice(0, 8) + '…' : u || '';
+    u && u.length > 14 ? u.slice(0, 8) + '…' : u || '';
 
   const renderNotification = (n) => {
     const isFollow = n.type === 'follow';

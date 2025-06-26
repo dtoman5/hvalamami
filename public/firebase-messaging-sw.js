@@ -1,8 +1,6 @@
-// Uvozi Firebase SDK-je za service worker
 importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js");
 
-// 🔧 Nastavitve tvoje Firebase aplikacije
 firebase.initializeApp({
   apiKey: "AIzaSyDYaw4D-zW4j2OnsgYiEKPLenQpTjsztoc",
   authDomain: "hvalamami-5ea07.firebaseapp.com",
@@ -11,10 +9,8 @@ firebase.initializeApp({
   appId: "1:450479142387:web:b270d921c975d6a7308e86",
 });
 
-// Inicializacija messaging servisa
 const messaging = firebase.messaging();
 
-// 👉 Prikaži obvestilo, ko pride v ozadju
 messaging.onBackgroundMessage((payload) => {
   const { title, body } = payload.notification || {};
   const notificationOptions = {
@@ -26,7 +22,6 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(title || 'Novo obvestilo!', notificationOptions);
 });
 
-// 👉 Ob kliku na obvestilo odpri pravilno stran
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
 
