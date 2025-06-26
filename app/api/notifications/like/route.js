@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createNotificationWithPush } from '@/lib/notifications/server';
+import { createNotificationWithPush } from '../../../../lib/notifications/server';
 
 export async function POST(req) {
   try {

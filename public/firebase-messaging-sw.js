@@ -19,7 +19,7 @@ messaging.onBackgroundMessage((payload) => {
   const { title, body } = payload.notification || {};
   const notificationOptions = {
     body: body || '',
-    icon: '/logo-small.jpg',
+    icon: '/logo-small.png',
     data: payload.data || {}, // tukaj bo npr. { url: "/objava/abc123" }
   };
 
