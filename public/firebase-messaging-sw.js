@@ -19,8 +19,8 @@ messaging.onBackgroundMessage((payload) => {
   const { title, body } = payload.notification || {};
   const notificationOptions = {
     body: body || '',
-    icon: '/logo-small.png',
-    data: payload.data || {}, // tukaj bo npr. { url: "/objava/abc123" }
+    badge: '/logo-hm-small.png', 
+    data: payload.data || {},
   };
 
   self.registration.showNotification(title || 'Novo obvestilo!', notificationOptions);

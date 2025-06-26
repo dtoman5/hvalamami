@@ -22,7 +22,7 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('❌ Napaka pri like obvestilu:', err.message);
+    console.error('Napaka pri like obvestilu:', err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

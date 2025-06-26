@@ -7,7 +7,6 @@ export async function POST(req) {
     const body = await req.json();
     const { post_id, comment_id, source_user_id } = body;
 
-    // 1) Obvesti avtorja objave
     const { data: postData, error: postErr } = await supabase
       .from('posts')
       .select('user_id')
@@ -24,7 +23,6 @@ export async function POST(req) {
       });
     }
 
-    // 2) Obvesti druge komentatorje (brez duplikatov)
     const { data: commenters, error: commentersErr } = await supabase
       .from('comments')
       .select('user_id')
@@ -51,7 +49,7 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('❌ Napaka pri comment obvestilu:', err.message);
+    console.error('Napaka pri comment obvestilu:', err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

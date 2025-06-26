@@ -21,7 +21,7 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('❌ Napaka pri comment_like obvestilu:', err.message);
+    console.error('Napaka pri všečku komentarja obvestilu:', err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
