@@ -19,9 +19,8 @@ messaging.onBackgroundMessage((payload) => {
 
   const notificationOptions = {
     body,
-    icon: '/logo-hm.png',
     badge: '/logo-hm-small.png',
-    data: { url }, // za click handler
+    data: { url },
   };
 
   self.registration.showNotification(title, notificationOptions);
