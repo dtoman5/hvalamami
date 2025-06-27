@@ -11,6 +11,7 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+// 🚫 NE uporabljamo payload.notification, ker to povzroči dvojno prikazovanje
 messaging.onBackgroundMessage((payload) => {
   const title = payload.data?.title || 'Novo obvestilo!';
   const body = payload.data?.body || '';
@@ -18,17 +19,17 @@ messaging.onBackgroundMessage((payload) => {
 
   const notificationOptions = {
     body,
-    icon: '/logo-hm.png',       // za prikaz ikone obvestila
-    badge: '/logo-hm-small.png',// majhna ikona na status vrstice (Android)
-    data: { url },              // shrani link za klik
+    icon: '/logo-hm.png',
+    badge: '/logo-hm-small.png',
+    data: { url }, // za click handler
   };
 
   self.registration.showNotification(title, notificationOptions);
 });
 
-// ko uporabnik klikne obvestilo
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
+
   const urlToOpen = event.notification.data?.url || '/';
 
   event.waitUntil(
