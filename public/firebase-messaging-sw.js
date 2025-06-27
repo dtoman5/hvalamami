@@ -12,19 +12,23 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const { title, body } = payload.notification || {};
+  const title = payload.data?.title || 'Novo obvestilo!';
+  const body = payload.data?.body || '';
+  const url = payload.data?.url || '/';
+
   const notificationOptions = {
-    body: body || '',
-    badge: '/logo-hm-small.png', 
-    data: payload.data || {},
+    body,
+    icon: '/logo-hm.png',       // za prikaz ikone obvestila
+    badge: '/logo-hm-small.png',// majhna ikona na status vrstice (Android)
+    data: { url },              // shrani link za klik
   };
 
-  self.registration.showNotification(title || 'Novo obvestilo!', notificationOptions);
+  self.registration.showNotification(title, notificationOptions);
 });
 
+// ko uporabnik klikne obvestilo
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
-
   const urlToOpen = event.notification.data?.url || '/';
 
   event.waitUntil(
