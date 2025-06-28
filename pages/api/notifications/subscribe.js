@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Manjka token ali user_id' });
   }
 
-  // Samo plain token string (če je bil prej objekt)
   const finalToken =
     typeof token === 'object' && token.endpoint ? token.endpoint : token;
 
@@ -25,20 +24,20 @@ export default async function handler(req, res) {
           token: finalToken,
         },
         {
-          onConflict: ['user_id'], // ali dodaš še 'token' če naj bo unikatno
+          onConflict: ['user_id'],
           ignoreDuplicates: false,
         }
       );
 
     if (error) {
-      console.error('❌ Napaka pri upsert:', error);
+      console.error('Napaka upsert:', error);
       return res.status(500).json({ error: error.message });
     }
 
-    console.log('✅ Naprava shranjena:', data);
+    console.log('Naprava shranjena:', data);
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error('❌ Napaka handler:', err);
+    console.error('Napaka handler:', err);
     return res.status(500).json({ error: err.message });
   }
 }

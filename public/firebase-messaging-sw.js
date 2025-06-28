@@ -1,6 +1,7 @@
 importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js");
 
+// Firebase config – naj ostane kot je
 firebase.initializeApp({
   apiKey: "AIzaSyDYaw4D-zW4j2OnsgYiEKPLenQpTjsztoc",
   authDomain: "hvalamami-5ea07.firebaseapp.com",
@@ -11,24 +12,25 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 🚫 NE uporabljamo payload.notification, ker to povzroči dvojno prikazovanje
 messaging.onBackgroundMessage((payload) => {
-  const title = payload.data?.title || 'Novo obvestilo!';
-  const body = payload.data?.body || '';
-  const url = payload.data?.url || '/';
+  const { title, body, icon, badge, url } = payload.data || {};
 
+  const notificationTitle = title || 'Novo obvestilo';
   const notificationOptions = {
-    body,
-    badge: '/logo-hm-small.png',
-    data: { url },
+    body: body || '',
+    icon: icon || '',
+    badge: badge || '/logo-hm-small.png',
+    data: {
+      url: url || '/',
+    },
   };
 
-  self.registration.showNotification(title, notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
+// Klik na obvestilo
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
-
   const urlToOpen = event.notification.data?.url || '/';
 
   event.waitUntil(
