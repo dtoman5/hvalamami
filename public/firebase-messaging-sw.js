@@ -1,7 +1,6 @@
 importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js");
 
-// Firebase config – naj ostane kot je
 firebase.initializeApp({
   apiKey: "AIzaSyDYaw4D-zW4j2OnsgYiEKPLenQpTjsztoc",
   authDomain: "hvalamami-5ea07.firebaseapp.com",
@@ -18,8 +17,8 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = title || 'Novo obvestilo';
   const notificationOptions = {
     body: body || '',
-    icon: icon || '',
-    badge: badge || '/logo-hm-small.png',
+    icon: icon || '/logo-hm-192.png',
+    badge: badge || '/logo-hm-192.png',
     data: {
       url: url || '/',
     },
@@ -28,7 +27,6 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// Klik na obvestilo
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
   const urlToOpen = event.notification.data?.url || '/';
